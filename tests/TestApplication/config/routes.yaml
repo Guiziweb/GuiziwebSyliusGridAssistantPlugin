@@ -1,0 +1,5 @@
+guiziweb_sylius_grid_assistant_plugin_admin:
+    resource: "@GuiziwebSyliusGridAssistantPlugin/config/routes/admin.yaml"
+
+guiziweb_sylius_grid_assistant_plugin_shop:
+    resource: "@GuiziwebSyliusGridAssistantPlugin/config/routes/shop.yaml"

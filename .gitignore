@@ -1,0 +1,38 @@
+# Dependencies
+/vendor/
+/node_modules/
+/composer.lock
+
+# Build artifacts
+/etc/build/*
+!/etc/build/.gitignore
+
+# Test files
+/.phpunit.result.cache
+/behat.yml
+/phpunit.xml
+
+# Docker
+/compose.override.yml
+
+# Symfony CLI
+/.php-version
+/php.ini
+
+# Environment files
+.env.local
+.env.*.local
+/tests/TestApplication/.env.local
+/tests/TestApplication/.env.*.local
+
+# Generated files
+/var/
+/public/
+/drivers/
+
+# IDE
+/.idea/
+/.vscode/
+
+# Claude Code
+/.claude/

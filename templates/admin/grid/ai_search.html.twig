@@ -1,0 +1,15 @@
+{% set resources = hookable_metadata.context.resources|default(null) %}
+
+{% if resources is not null and resources.definition is defined %}
+    {% set grid_code = resources.definition.code %}
+    {% set current_route = app.request.attributes.get('_route') %}
+    {% set route_params = app.request.attributes.all('_route_params')|json_encode %}
+    {% set ai_query = app.request.query.get('ai_query', '') %}
+
+    <twig:guiziweb:grid_assistant:ai_search
+        gridCode="{{ grid_code }}"
+        routeName="{{ current_route }}"
+        routeParams="{{ route_params }}"
+        query="{{ ai_query }}"
+    />
+{% endif %}

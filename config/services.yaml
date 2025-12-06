@@ -1,0 +1,33 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Guiziweb\SyliusGridAssistantPlugin\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations}'
+
+    Symfony\UX\Autocomplete\AutocompleterRegistry:
+        alias: 'ux.autocomplete.autocompleter_registry'
+
+    # Grid context is request-scoped
+    Guiziweb\SyliusGridAssistantPlugin\Context\GridContext:
+        shared: true
+
+    # Tool enricher - tagged to be picked up by DynamicDescriptionToolFactory
+    Guiziweb\SyliusGridAssistantPlugin\Toolbox\FilterGridToolEnricher:
+        tags:
+            - { name: 'guiziweb.grid_assistant.tool_enricher' }
+
+    # Dynamic tool factory - decorates the default factory to enrich tool descriptions
+    Guiziweb\SyliusGridAssistantPlugin\Toolbox\DynamicDescriptionToolFactory:
+        decorates: 'ai.tool_factory'
+        arguments:
+            $decorated: '@.inner'
+            $enrichers: !tagged_iterator 'guiziweb.grid_assistant.tool_enricher'
+
+    # GridQueryProcessor - injects the grid_assistant agent
+    # User must configure an agent named 'grid_assistant' in config/packages/ai.yaml
+    Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessor:
+        arguments:
+            $agent: '@ai.agent.grid_assistant'

@@ -1,0 +1,5 @@
+guiziweb:
+    grid_assistant:
+        placeholder: "Describe what you are looking for..."
+        search_button: "AI Search"
+        searching: "Searching..."

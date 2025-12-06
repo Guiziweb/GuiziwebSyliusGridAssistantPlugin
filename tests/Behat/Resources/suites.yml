@@ -1,0 +1,10 @@
+# Put your Behat suites definitions here
+
+default:
+    suites:
+        greeting_customer:
+            contexts:
+                - guiziweb_sylius_grid_assistant_plugin.context.ui.shop.welcome
+
+            filters:
+                tags: "@greeting_customer"

@@ -1,0 +1,49 @@
+<div class="card mb-3" {{ attributes }}>
+    <div class="card-body py-2">
+        <form
+            data-action="live#action:prevent"
+            data-live-action-param="search"
+            class="d-flex gap-2 align-items-center"
+        >
+            <div class="input-icon flex-grow-1">
+                <span class="input-icon-addon">
+                    {{ ux_icon('tabler:sparkles', {class: 'icon'}) }}
+                </span>
+                <input
+                    type="text"
+                    name="query"
+                    data-model="norender|query"
+                    class="form-control"
+                    placeholder="{{ 'guiziweb.grid_assistant.placeholder'|trans }}"
+                    value="{{ this.query }}"
+                    autocomplete="off"
+                    data-loading-disabled
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary" data-loading-disabled>
+                <span data-loading="hide">
+                    {{ ux_icon('tabler:search', {class: 'icon'}) }}
+                    {{ 'guiziweb.grid_assistant.search_button'|trans }}
+                </span>
+                <span data-loading="show" class="d-none">
+                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                    {{ 'guiziweb.grid_assistant.searching'|trans }}
+                </span>
+            </button>
+        </form>
+
+        {% if this.error %}
+            <div class="alert alert-danger mt-2 mb-0 py-2">
+                {{ this.error }}
+            </div>
+        {% endif %}
+
+        {% set ai_warning = app.request.query.get('ai_warning') %}
+        {% if ai_warning %}
+            <div class="alert alert-warning mt-2 mb-0 py-2">
+                {{ ai_warning }}
+            </div>
+        {% endif %}
+    </div>
+</div>

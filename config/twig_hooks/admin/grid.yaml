@@ -1,0 +1,6 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.common.index.content.grid':
+            ai_search:
+                template: '@GuiziwebSyliusGridAssistantPlugin/admin/grid/ai_search.html.twig'
+                priority: 250
