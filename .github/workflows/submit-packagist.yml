@@ -1,0 +1,11 @@
+name: Submit to Packagist
+
+on:
+    push:
+        tags:
+            - 'v0.1.0'
+
+jobs:
+    submit:
+        uses: Guiziweb/.github/.github/workflows/submit-packagist.yml@main
+        secrets: inherit

@@ -1,0 +1,11 @@
+name: Create Flex Recipe
+
+on:
+    push:
+        tags:
+            - 'v0.1.0'
+
+jobs:
+    create-recipe:
+        uses: Guiziweb/.github/.github/workflows/create-flex-recipe.yml@main
+        secrets: inherit
