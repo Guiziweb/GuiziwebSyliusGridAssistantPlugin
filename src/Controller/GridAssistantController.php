@@ -40,18 +40,22 @@ final class GridAssistantController extends AbstractController
         if (!$form->isSubmitted() || !$form->isValid()) {
             $errors = [];
             foreach ($form->getErrors(true) as $error) {
-                $errors[] = $error->getMessage();
+                if ($error instanceof \Symfony\Component\Form\FormError) {
+                    $errors[] = $error->getMessage();
+                }
             }
             $this->addFlash('error', 'Invalid search request: ' . ($errors ? implode(', ', $errors) : 'form not submitted'));
 
-            return $this->redirect($request->headers->get('referer', '/admin'));
+            return $this->redirect($request->headers->get('referer') ?? '/admin');
         }
 
+        /** @var array<string, mixed> $data */
         $data = $form->getData();
-        $query = $data['query'] ?? '';
-        $gridCode = $data['grid_code'] ?? '';
-        $routeName = $data['route_name'] ?? '';
-        $routeParams = json_decode($data['route_params'] ?? '{}', true) ?? [];
+        $query = isset($data['query']) && is_string($data['query']) ? $data['query'] : '';
+        $gridCode = isset($data['grid_code']) && is_string($data['grid_code']) ? $data['grid_code'] : '';
+        $routeName = isset($data['route_name']) && is_string($data['route_name']) ? $data['route_name'] : '';
+        $routeParamsRaw = isset($data['route_params']) && is_string($data['route_params']) ? $data['route_params'] : '{}';
+        $routeParams = (array) (json_decode($routeParamsRaw, true) ?? []);
 
         if (empty($query) || empty($gridCode) || empty($routeName)) {
             $this->addFlash('error', 'Invalid search request.');
@@ -69,14 +73,21 @@ final class GridAssistantController extends AbstractController
         }
 
         // Show warnings if any
-        if (isset($result['warnings']) && is_array($result['warnings'])) {
+        if (isset($result['warnings'])) {
             foreach ($result['warnings'] as $warning) {
                 $this->addFlash('info', $warning);
             }
         }
 
-        // Redirect to the filtered grid
-        return $this->redirect($result['redirect_url']);
+        // Redirect to the filtered grid — redirect_url is guaranteed present since 'error' was not set
+        $redirectUrl = $result['redirect_url'] ?? null;
+        if (null === $redirectUrl) {
+            $this->addFlash('error', 'No redirect URL generated.');
+
+            return $this->redirectToRoute($routeName, $routeParams);
+        }
+
+        return $this->redirect($redirectUrl);
     }
 
     #[Route(
@@ -94,11 +105,13 @@ final class GridAssistantController extends AbstractController
         $this->gridContext->setContext($gridCode, 'debug_route', []);
 
         // Create a dummy tool and enrich it to see the JSON Schema
+        /** @var array{type: 'object', properties: array<string, array{type: string, description: string}>, required: array<int, string>, additionalProperties: false} $dummyParams */
+        $dummyParams = ['type' => 'object', 'properties' => [], 'required' => [], 'additionalProperties' => false];
         $baseTool = new Tool(
             new ExecutionReference(FilterGridTool::class),
             'filter_grid',
             'Base description',
-            ['type' => 'object', 'properties' => []],
+            $dummyParams,
         );
 
         $enrichedTool = $this->toolEnricher->enrich($baseTool);

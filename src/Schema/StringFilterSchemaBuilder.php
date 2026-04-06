@@ -31,7 +31,7 @@ final class StringFilterSchemaBuilder extends AbstractFilterSchemaBuilder
     {
         $options = $filter->getOptions();
         $label = $this->translateLabel($filter->getLabel());
-        $defaultOperator = $options['type'] ?? StringFilter::TYPE_CONTAINS;
+        $defaultOperator = is_string($options['type'] ?? null) ? $options['type'] : StringFilter::TYPE_CONTAINS;
 
         return [
             'type' => 'object',

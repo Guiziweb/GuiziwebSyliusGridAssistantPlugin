@@ -30,9 +30,10 @@ final class EntityFilterSchemaBuilder extends AbstractFilterSchemaBuilder
         $label = $this->translateLabel($filter->getLabel());
         $formOptions = $filter->getFormOptions();
 
-        $extraOptions = $formOptions['extra_options'] ?? [];
-        $choiceLabel = $extraOptions['choice_label'] ?? 'name';
-        $isMultiple = $formOptions['multiple'] ?? false;
+        /** @var array<string, mixed> $extraOptions */
+        $extraOptions = is_array($formOptions['extra_options'] ?? null) ? $formOptions['extra_options'] : [];
+        $choiceLabel = isset($extraOptions['choice_label']) && is_string($extraOptions['choice_label']) ? $extraOptions['choice_label'] : 'name';
+        $isMultiple = (bool) ($formOptions['multiple'] ?? false);
 
         if ($isMultiple) {
             return [

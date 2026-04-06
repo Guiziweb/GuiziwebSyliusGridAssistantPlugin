@@ -111,8 +111,9 @@ final readonly class GridSchemaBuilder
     private function extractEntityClass(Grid $grid): ?string
     {
         $driverConfig = $grid->getDriverConfiguration();
+        $class = $driverConfig['class'] ?? null;
 
-        return $driverConfig['class'] ?? null;
+        return is_string($class) ? $class : null;
     }
 
     /**

@@ -52,7 +52,8 @@ final class AiSearchComponent
             return null;
         }
 
-        $routeParams = json_decode($this->routeParams, true) ?? [];
+        /** @var array<string, mixed> $routeParams */
+        $routeParams = (array) (json_decode($this->routeParams, true) ?? []);
 
         $result = $this->queryProcessor->process(
             $this->query,
@@ -67,12 +68,16 @@ final class AiSearchComponent
             return null;
         }
 
-        // Build redirect URL
-        $redirectUrl = $result['redirect_url'];
+        // Build redirect URL — redirect_url is guaranteed present since 'error' was not set
+        $redirectUrl = $result['redirect_url'] ?? null;
+        if (null === $redirectUrl) {
+            return null;
+        }
+
         $redirectUrl .= (str_contains($redirectUrl, '?') ? '&' : '?') . 'ai_query=' . urlencode($this->query);
 
         // Add warnings to URL if any (will be displayed via flash message)
-        if (isset($result['warnings']) && is_array($result['warnings']) && !empty($result['warnings'])) {
+        if (isset($result['warnings']) && !empty($result['warnings'])) {
             $redirectUrl .= '&ai_warning=' . urlencode(implode('. ', $result['warnings']));
         }
 

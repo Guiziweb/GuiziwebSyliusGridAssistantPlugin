@@ -17,13 +17,14 @@ final class SelectFilterSchemaBuilder extends AbstractFilterSchemaBuilder
     {
         $label = $this->translateLabel($filter->getLabel());
         $formOptions = $filter->getFormOptions();
-        $choices = $formOptions['choices'] ?? [];
-        $isMultiple = $formOptions['multiple'] ?? false;
+        /** @var array<string, mixed> $choices */
+        $choices = is_array($formOptions['choices'] ?? null) ? $formOptions['choices'] : [];
+        $isMultiple = (bool) ($formOptions['multiple'] ?? false);
 
         // Translate and get choice values
         $translatedChoices = [];
         foreach ($choices as $choiceLabel => $value) {
-            $translatedChoices[$this->translator->trans($choiceLabel)] = $value;
+            $translatedChoices[$this->translator->trans((string) $choiceLabel)] = $value;
         }
         $choiceValues = array_values($translatedChoices);
 

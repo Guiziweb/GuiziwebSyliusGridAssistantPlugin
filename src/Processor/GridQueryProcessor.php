@@ -25,7 +25,7 @@ final readonly class GridQueryProcessor
     /**
      * Process a natural language query and return a redirect URL with filters.
      *
-     * @return array{redirect_url: string, warnings?: array<string>}|array{error: string}
+     * @return array{redirect_url: string, warnings?: string[]}|array{error: string}
      */
     public function process(string $query, string $gridCode, string $routeName, array $routeParams): array
     {
@@ -109,7 +109,7 @@ final readonly class GridQueryProcessor
 
         $response = ['redirect_url' => $redirectUrl];
 
-        if (isset($toolResult['warnings']) && is_array($toolResult['warnings'])) {
+        if (isset($toolResult['warnings'])) {
             $response['warnings'] = $toolResult['warnings'];
         }
 

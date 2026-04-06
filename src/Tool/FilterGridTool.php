@@ -76,8 +76,8 @@ final class FilterGridTool
             return ['error' => 'No grid context available. Cannot filter.'];
         }
 
-        $gridCode = $this->gridContext->getGridCode();
-        $routeName = $this->gridContext->getRouteName();
+        $gridCode = (string) $this->gridContext->getGridCode();
+        $routeName = (string) $this->gridContext->getRouteName();
         $routeParams = $this->gridContext->getRouteParams();
 
         $this->aiLogger->info('[FilterGridTool] Invoked', [
@@ -205,14 +205,14 @@ final class FilterGridTool
     private function formatStringCriterion(mixed $value, Filter $filter): ?array
     {
         $options = $filter->getOptions();
-        $defaultOperator = $options['type'] ?? 'contains';
+        $defaultOperator = is_string($options['type'] ?? null) ? (string) $options['type'] : 'contains';
 
         if (is_array($value)) {
-            $type = $value['type'] ?? $defaultOperator;
-            $val = $value['value'] ?? '';
+            $type = is_string($value['type'] ?? null) ? (string) $value['type'] : $defaultOperator;
+            $val = is_scalar($value['value'] ?? null) ? (string) $value['value'] : '';
         } else {
             $type = $defaultOperator;
-            $val = (string) $value;
+            $val = is_scalar($value) ? (string) $value : '';
         }
 
         if ('' === $val && !in_array($type, ['empty', 'not_empty'], true)) {
@@ -254,8 +254,10 @@ final class FilterGridTool
     {
         $formOptions = $filter->getFormOptions();
         // Choices are defined as [label => value], we need the values
-        $choices = array_values($formOptions['choices'] ?? []);
-        $isMultiple = $formOptions['multiple'] ?? false;
+        /** @var array<mixed> $choicesRaw */
+        $choicesRaw = is_array($formOptions['choices'] ?? null) ? $formOptions['choices'] : [];
+        $choices = array_values($choicesRaw);
+        $isMultiple = (bool) ($formOptions['multiple'] ?? false);
 
         if ($isMultiple && is_array($value)) {
             return array_values(array_filter($value, fn ($v) => in_array($v, $choices, true)));
@@ -480,7 +482,8 @@ final class FilterGridTool
         ]);
 
         try {
-            $results = $qb->getQuery()->getResult();
+            /** @var array<object> $results */
+            $results = $qb->getQuery()->getResult() ?? [];
             if (!empty($results)) {
                 $entity = $results[0];
                 $id = $autocompleter->getValue($entity);
@@ -490,7 +493,7 @@ final class FilterGridTool
                     'id' => $id,
                 ]);
 
-                return (int) $id;
+                return is_scalar($id) ? (int) $id : 0;
             }
         } catch (\Exception $e) {
             $this->aiLogger->warning('[FilterGridTool] Entity search failed', [
@@ -580,7 +583,7 @@ final class FilterGridTool
     {
         $label = $filter->getLabel();
 
-        if (null === $label || '' === $label) {
+        if (!is_string($label) || '' === $label) {
             return $filter->getName();
         }
 

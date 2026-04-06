@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Schema;
 
+use Sylius\Component\Currency\Model\CurrencyInterface;
 use Sylius\Component\Currency\Repository\CurrencyRepositoryInterface;
 use Sylius\Component\Grid\Definition\Filter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class MoneyFilterSchemaBuilder extends AbstractFilterSchemaBuilder
 {
+    /**
+     * @param CurrencyRepositoryInterface<CurrencyInterface> $currencyRepository
+     */
     public function __construct(
         TranslatorInterface $translator,
         private readonly CurrencyRepositoryInterface $currencyRepository,
@@ -65,7 +69,9 @@ final class MoneyFilterSchemaBuilder extends AbstractFilterSchemaBuilder
         $codes = [];
 
         foreach ($currencies as $currency) {
-            $codes[] = $currency->getCode();
+            if ($currency instanceof CurrencyInterface) {
+                $codes[] = (string) $currency->getCode();
+            }
         }
 
         return $codes;

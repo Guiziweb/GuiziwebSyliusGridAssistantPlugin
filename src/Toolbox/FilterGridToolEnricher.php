@@ -32,14 +32,17 @@ final readonly class FilterGridToolEnricher implements ToolDescriptionEnricherIn
             return $tool;
         }
 
-        $gridCode = $this->gridContext->getGridCode();
+        $gridCode = (string) $this->gridContext->getGridCode();
         $gridSchema = $this->schemaBuilder->buildSchema($gridCode);
+
+        /** @var array{type: 'object', properties: array<string, array{type: string, description: string}>, required: array<int, string>, additionalProperties: false} $parameters */
+        $parameters = $this->buildParametersSchema($gridSchema);
 
         return new Tool(
             $tool->getReference(),
             $tool->getName(),
             $this->buildDescription($gridSchema),
-            $this->buildParametersSchema($gridSchema),
+            $parameters,
         );
     }
 
@@ -72,7 +75,7 @@ final readonly class FilterGridToolEnricher implements ToolDescriptionEnricherIn
                     ['type' => 'string', 'enum' => ['asc', 'desc']],
                     ['type' => 'null'],
                 ],
-                'description' => sprintf('Sort by %s. Set to null if the user did not ask to sort by this field.', $fieldConfig['label'] ?? $fieldName),
+                'description' => sprintf('Sort by %s. Set to null if the user did not ask to sort by this field.', is_string($fieldConfig['label'] ?? null) ? $fieldConfig['label'] : $fieldName),
             ];
         }
 
@@ -115,7 +118,7 @@ final readonly class FilterGridToolEnricher implements ToolDescriptionEnricherIn
 
         $filtersDescription = '';
         foreach ($filters as $name => $schema) {
-            $filtersDescription .= sprintf("- %s: %s\n", $name, $schema['description'] ?? $name);
+            $filtersDescription .= sprintf("- %s: %s\n", $name, is_string($schema['description'] ?? null) ? $schema['description'] : $name);
         }
 
         return sprintf(

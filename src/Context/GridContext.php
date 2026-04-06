@@ -56,7 +56,7 @@ final class GridContext
     }
 
     /**
-     * @param array{redirect_url?: string, error?: string} $result
+     * @param array{redirect_url?: string, error?: string, warnings?: string[]} $result
      */
     public function setResult(array $result): void
     {
@@ -64,7 +64,7 @@ final class GridContext
     }
 
     /**
-     * @return array{redirect_url?: string, error?: string}|null
+     * @return array{redirect_url?: string, error?: string, warnings?: string[]}|null
      */
     public function getResult(): ?array
     {
