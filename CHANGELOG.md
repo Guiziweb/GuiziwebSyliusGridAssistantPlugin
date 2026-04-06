@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/compare/v0.2.0...v0.2.1) (2026-04-06)
+
+
+### Bug Fixes
+
+* **phpstan:** resolve all static analysis errors to level max ([2360fa5](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/2360fa5c7fb317563cb95a2768f1cd4b7d5c5488))
+
 ## [0.2.0](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/compare/v0.1.0...v0.2.0) (2026-04-06)
 
 
