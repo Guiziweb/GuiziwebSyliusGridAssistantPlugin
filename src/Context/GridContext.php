@@ -13,8 +13,11 @@ namespace Guiziweb\SyliusGridAssistantPlugin\Context;
 final class GridContext
 {
     private ?string $gridCode = null;
+
     private ?string $routeName = null;
+
     private array $routeParams = [];
+
     private ?array $result = null;
 
     public function setContext(string $gridCode, string $routeName, array $routeParams = []): void

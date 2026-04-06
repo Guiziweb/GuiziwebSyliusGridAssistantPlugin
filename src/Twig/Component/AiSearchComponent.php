@@ -14,7 +14,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent(
     name: 'guiziweb:grid_assistant:ai_search',
-    template: '@GuiziwebSyliusGridAssistantPlugin/components/ai_search.html.twig'
+    template: '@GuiziwebSyliusGridAssistantPlugin/components/ai_search.html.twig',
 )]
 final class AiSearchComponent
 {
@@ -58,7 +58,7 @@ final class AiSearchComponent
             $this->query,
             $this->gridCode,
             $this->routeName,
-            $routeParams
+            $routeParams,
         );
 
         if (isset($result['error'])) {

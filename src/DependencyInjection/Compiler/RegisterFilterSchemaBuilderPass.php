@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\DependencyInjection\Compiler;
 
-use Guiziweb\SyliusGridAssistantPlugin\Schema\FilterSchemaBuilderInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\FilterSchemaBuilderRegistry;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

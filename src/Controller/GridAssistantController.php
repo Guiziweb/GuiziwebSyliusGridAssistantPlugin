@@ -8,8 +8,8 @@ use Guiziweb\SyliusGridAssistantPlugin\Context\GridContext;
 use Guiziweb\SyliusGridAssistantPlugin\Form\Type\AiSearchType;
 use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessor;
 use Guiziweb\SyliusGridAssistantPlugin\Service\GridSchemaBuilder;
-use Guiziweb\SyliusGridAssistantPlugin\Toolbox\FilterGridToolEnricher;
 use Guiziweb\SyliusGridAssistantPlugin\Tool\FilterGridTool;
+use Guiziweb\SyliusGridAssistantPlugin\Toolbox\FilterGridToolEnricher;
 use Symfony\AI\Platform\Tool\ExecutionReference;
 use Symfony\AI\Platform\Tool\Tool;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +30,7 @@ final class GridAssistantController extends AbstractController
     #[Route(
         path: '/grid-assistant/search',
         name: 'guiziweb_grid_assistant_admin_search',
-        methods: ['POST']
+        methods: ['POST'],
     )]
     public function search(Request $request): Response
     {
@@ -82,7 +82,7 @@ final class GridAssistantController extends AbstractController
     #[Route(
         path: '/grid-assistant/debug/{gridCode}',
         name: 'guiziweb_grid_assistant_admin_debug',
-        methods: ['GET']
+        methods: ['GET'],
     )]
     public function debug(string $gridCode): Response
     {
