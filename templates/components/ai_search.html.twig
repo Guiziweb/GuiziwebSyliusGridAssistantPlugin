@@ -34,8 +34,8 @@
         </form>
 
         {% if this.error %}
-            <div class="alert alert-danger mt-2 mb-0 py-2">
-                {{ this.error }}
+            <div class="mt-2 text-danger">
+                {{ this.error|markdown_to_html }}
             </div>
         {% endif %}
 

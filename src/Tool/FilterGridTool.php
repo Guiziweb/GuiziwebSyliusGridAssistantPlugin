@@ -45,9 +45,7 @@ final class FilterGridTool
         'resource_autocomplete',
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $warnings = [];
 
     public function __construct(
@@ -63,8 +61,8 @@ final class FilterGridTool
     }
 
     /**
-     * @param array<string, mixed>  $criteria Filter criteria - format depends on filter type
-     * @param array<string, string> $sorting  Sorting configuration, e.g., ["date" => "desc"]
+     * @param array<string, mixed>       $criteria Filter criteria - format depends on filter type
+     * @param array<string, string|null> $sorting  Sorting configuration, e.g., ["date" => "desc"]
      *
      * @return array{redirect_url: string, warnings?: string[]}|array{error: string}
      */
@@ -104,7 +102,10 @@ final class FilterGridTool
                 'trace' => $e->getTraceAsString(),
             ]);
 
-            return ['error' => sprintf('Failed to validate criteria: %s', $e->getMessage())];
+            $error = ['error' => sprintf('Failed to validate criteria: %s', $e->getMessage())];
+            $this->gridContext->setResult($error);
+
+            return $error;
         }
 
         // Validate sorting using Grid definition directly
@@ -139,7 +140,10 @@ final class FilterGridTool
 
             return $result;
         } catch (\Exception $e) {
-            return ['error' => sprintf("Failed to generate URL: %s", $e->getMessage())];
+            $error = ['error' => sprintf('Failed to generate URL: %s', $e->getMessage())];
+            $this->gridContext->setResult($error);
+
+            return $error;
         }
     }
 
@@ -147,6 +151,7 @@ final class FilterGridTool
      * Validate and format criteria based on Grid definition.
      *
      * @param array<string, mixed> $criteria
+     *
      * @return array<string, mixed>
      */
     private function validateAndFormatCriteria(array $criteria, Grid $grid): array
@@ -158,6 +163,7 @@ final class FilterGridTool
                 $this->aiLogger->warning('[FilterGridTool] Unknown filter skipped', [
                     'filter' => $filterName,
                 ]);
+
                 continue;
             }
 
@@ -317,6 +323,7 @@ final class FilterGridTool
             if (isset($datePart['time'])) {
                 $result['time'] = $datePart['time'];
             }
+
             return $result;
         }
 
@@ -336,21 +343,21 @@ final class FilterGridTool
 
         $result = [];
 
-        if (isset($value['greaterThan']) && is_numeric($value['greaterThan'])) {
-            $result['greaterThan'] = $value['greaterThan'];
+        if (isset($value['greaterThan']) && is_numeric($value['greaterThan']) && $value['greaterThan'] > 0) {
+            $result['greaterThan'] = (float) $value['greaterThan'];
         }
 
-        if (isset($value['lessThan']) && is_numeric($value['lessThan'])) {
-            $result['lessThan'] = $value['lessThan'];
+        if (isset($value['lessThan']) && is_numeric($value['lessThan']) && $value['lessThan'] > 0) {
+            $result['lessThan'] = (float) $value['lessThan'];
         }
 
         // Handle alternative key names
-        if (isset($value['min']) && is_numeric($value['min'])) {
-            $result['greaterThan'] = $value['min'];
+        if (isset($value['min']) && is_numeric($value['min']) && $value['min'] > 0) {
+            $result['greaterThan'] = (float) $value['min'];
         }
 
-        if (isset($value['max']) && is_numeric($value['max'])) {
-            $result['lessThan'] = $value['max'];
+        if (isset($value['max']) && is_numeric($value['max']) && $value['max'] > 0) {
+            $result['lessThan'] = (float) $value['max'];
         }
 
         // Handle currency for money filter
@@ -379,6 +386,7 @@ final class FilterGridTool
                     $ids[] = $resolved;
                 }
             }
+
             return !empty($ids) ? $ids : null;
         }
 
@@ -468,7 +476,7 @@ final class FilterGridTool
 
         $this->aiLogger->debug('[FilterGridTool] Query', [
             'dql' => $qb->getDQL(),
-            'params' => array_map(fn($p) => $p->getValue(), $qb->getParameters()->toArray()),
+            'params' => array_map(fn ($p) => $p->getValue(), $qb->getParameters()->toArray()),
         ]);
 
         try {
@@ -517,7 +525,8 @@ final class FilterGridTool
     /**
      * Validate sorting configuration.
      *
-     * @param array<string, string> $sorting
+     * @param array<string, string|null> $sorting
+     *
      * @return array<string, string>
      */
     private function validateSorting(array $sorting, Grid $grid): array
@@ -526,14 +535,19 @@ final class FilterGridTool
         $sortableFields = $this->getSortableFields($grid);
 
         foreach ($sorting as $field => $direction) {
+            if (null === $direction) {
+                continue;
+            }
+
             if (!in_array($field, $sortableFields, true)) {
                 $this->aiLogger->warning('[FilterGridTool] Unknown sortable field skipped', [
                     'field' => $field,
                 ]);
+
                 continue;
             }
 
-            $normalizedDirection = strtolower(trim($direction));
+            $normalizedDirection = strtolower(trim((string) $direction));
             if (!in_array($normalizedDirection, ['asc', 'desc'], true)) {
                 $normalizedDirection = 'asc';
             }

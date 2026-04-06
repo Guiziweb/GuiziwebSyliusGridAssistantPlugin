@@ -10,6 +10,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\AgentInterface;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
+use Symfony\AI\Platform\Result\TextResult;
 
 final readonly class GridQueryProcessor
 {
@@ -39,15 +40,13 @@ final readonly class GridQueryProcessor
         // Create message bag with system prompt and user query
         $systemPrompt = sprintf(
             'You are a grid filtering assistant. ' .
-            'Call the filter_grid tool ONCE with the appropriate criteria based on the user query. ' .
-            'After the tool returns a redirect_url, respond with a short confirmation message. ' .
-            'Do NOT call filter_grid again after it succeeds. ' .
-            'If the user query is unclear, make your best guess based on available filters. ' .
-            'If you cannot apply the requested filter (missing filter, invalid value, etc.), ' .
-            'DO NOT call the tool. Instead, respond with a brief explanation of what went wrong ' .
-            'and what filters are available. ' .
+            'When the user query contains enough information to apply at least one filter, call the filter_grid tool ONCE. ' .
+            'Only include filters explicitly mentioned by the user. Do not add filters that were not requested. ' .
+            'For sorting: only include a sorting field if the user explicitly asked to sort by it. If the user did not mention sorting, pass an empty object {} for sorting. ' .
+            'If the query is completely unclear and no filter can be applied at all, ' .
+            'respond with a brief explanation of what filters are available. ' .
             'Today is %s.',
-            (new \DateTimeImmutable())->format('Y-m-d')
+            (new \DateTimeImmutable())->format('Y-m-d'),
         );
 
         $messages = new MessageBag(
@@ -61,10 +60,17 @@ final readonly class GridQueryProcessor
             'routeName' => $routeName,
         ]);
 
+        $aiResponse = null;
+
         try {
             $result = $this->agent->call($messages, ['stream' => false]);
+            if ($result instanceof TextResult) {
+                $text = $result->getContent();
+                $aiResponse = '' !== trim($text) ? $text : null;
+            }
+
             $this->aiLogger->info('[GridAssistant] Agent response', [
-                'content' => $result->getContent(),
+                'content' => $aiResponse,
             ]);
         } catch (\Throwable $e) {
             $this->aiLogger->error('[GridAssistant] Agent error', [
@@ -90,9 +96,11 @@ final readonly class GridQueryProcessor
         ]);
 
         if (null === $redirectUrl) {
-            // Return the AI's response as feedback to the user
-            $aiResponse = $result->getContent();
-            if (is_string($aiResponse) && '' !== trim($aiResponse)) {
+            if (isset($toolResult['error'])) {
+                return ['error' => $toolResult['error']];
+            }
+
+            if (null !== $aiResponse) {
                 return ['error' => $aiResponse];
             }
 

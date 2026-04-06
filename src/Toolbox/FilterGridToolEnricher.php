@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Toolbox;
 
-use Guiziweb\SyliusGridAssistantPlugin\Toolbox\ToolDescriptionEnricherInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Context\GridContext;
 use Guiziweb\SyliusGridAssistantPlugin\Service\GridSchemaBuilder;
 use Guiziweb\SyliusGridAssistantPlugin\Tool\FilterGridTool;
@@ -48,17 +47,32 @@ final readonly class FilterGridToolEnricher implements ToolDescriptionEnricherIn
      * Build the JSON Schema for tool parameters.
      *
      * @param array<string, mixed> $gridSchema
+     *
      * @return array<string, mixed>
      */
     private function buildParametersSchema(array $gridSchema): array
     {
-        $sortingProperties = [];
+        /** @var array<string, array<string, mixed>> $filters */
+        $filters = $gridSchema['filters'];
+        /** @var array<string, array<string, mixed>> $sortableFields */
+        $sortableFields = $gridSchema['sortable_fields'];
 
-        foreach ($gridSchema['sortable_fields'] as $fieldName => $fieldConfig) {
+        $criteriaProperties = [];
+        foreach ($filters as $filterName => $filterSchema) {
+            $criteriaProperties[$filterName] = [
+                'anyOf' => [$filterSchema, ['type' => 'null']],
+                'description' => ($filterSchema['description'] ?? $filterName) . '. Set to null if the user did not mention this filter.',
+            ];
+        }
+
+        $sortingProperties = [];
+        foreach ($sortableFields as $fieldName => $fieldConfig) {
             $sortingProperties[$fieldName] = [
-                'type' => 'string',
-                'enum' => ['asc', 'desc'],
-                'description' => sprintf('Sort by %s', $fieldConfig['label'] ?? $fieldName),
+                'anyOf' => [
+                    ['type' => 'string', 'enum' => ['asc', 'desc']],
+                    ['type' => 'null'],
+                ],
+                'description' => sprintf('Sort by %s. Set to null if the user did not ask to sort by this field.', $fieldConfig['label'] ?? $fieldName),
             ];
         }
 
@@ -67,18 +81,20 @@ final readonly class FilterGridToolEnricher implements ToolDescriptionEnricherIn
             'properties' => [
                 'criteria' => [
                     'type' => 'object',
-                    'properties' => $gridSchema['filters'],
+                    'properties' => $criteriaProperties,
+                    'required' => array_keys($criteriaProperties),
                     'additionalProperties' => false,
-                    'description' => 'Filter criteria - only use the properties defined here',
+                    'description' => 'Filter criteria. Set each filter to null unless the user explicitly mentioned it.',
                 ],
                 'sorting' => [
                     'type' => 'object',
                     'properties' => $sortingProperties,
+                    'required' => array_keys($sortingProperties),
                     'additionalProperties' => false,
-                    'description' => 'Sorting configuration',
+                    'description' => 'Sorting. Set each field to null unless the user explicitly asked to sort by it.',
                 ],
             ],
-            'required' => ['criteria'],
+            'required' => ['criteria', 'sorting'],
             'additionalProperties' => false,
         ];
     }
@@ -90,14 +106,23 @@ final readonly class FilterGridToolEnricher implements ToolDescriptionEnricherIn
      */
     private function buildDescription(array $gridSchema): string
     {
-        $filtersList = array_keys($gridSchema['filters']);
-        $sortableList = array_keys($gridSchema['sortable_fields']);
+        /** @var array<string, array<string, mixed>> $filters */
+        $filters = $gridSchema['filters'];
+        /** @var array<string, array<string, mixed>> $sortableFields */
+        $sortableFields = $gridSchema['sortable_fields'];
+
+        $sortableList = array_keys($sortableFields);
+
+        $filtersDescription = '';
+        foreach ($filters as $name => $schema) {
+            $filtersDescription .= sprintf("- %s: %s\n", $name, $schema['description'] ?? $name);
+        }
 
         return sprintf(
             "Generate a URL to filter and sort the grid.\n\n" .
-            "Available filters: %s\n\n" .
-            "Sortable fields: %s",
-            implode(', ', $filtersList),
+            "Available filters (include ONLY those explicitly mentioned by the user):\n%s\n" .
+            'Sortable fields: %s',
+            $filtersDescription,
             implode(', ', $sortableList),
         );
     }
