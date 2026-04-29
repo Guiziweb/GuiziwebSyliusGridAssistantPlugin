@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Service;
 
-use Guiziweb\SyliusGridAssistantPlugin\Schema\FilterSchemaBuilderRegistry;
-use Guiziweb\SyliusGridAssistantPlugin\Schema\TranslateLabelTrait;
+use Guiziweb\SyliusGridAssistantPlugin\Schema\Builder\FilterSchemaBuilderRegistry;
+use Guiziweb\SyliusGridAssistantPlugin\Schema\Builder\TranslateLabelTrait;
 use Sylius\Component\Grid\Definition\Filter;
 use Sylius\Component\Grid\Definition\Grid;
 use Sylius\Component\Grid\Provider\GridProviderInterface;

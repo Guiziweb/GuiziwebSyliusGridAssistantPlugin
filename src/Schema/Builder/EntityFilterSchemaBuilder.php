@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Guiziweb\SyliusGridAssistantPlugin\Schema;
+namespace Guiziweb\SyliusGridAssistantPlugin\Schema\Builder;
 
 use Sylius\Component\Grid\Definition\Filter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class EntityFilterSchemaBuilder extends AbstractFilterSchemaBuilder
+class EntityFilterSchemaBuilder implements FilterSchemaBuilderInterface
 {
+    use TranslateLabelTrait;
+
     public function __construct(
-        TranslatorInterface $translator,
+        private readonly TranslatorInterface $translator,
     ) {
-        parent::__construct($translator);
     }
 
-    public static function getType(): array
+    public static function getType(): string|array
     {
         return [
             'entity',
@@ -25,7 +26,7 @@ final class EntityFilterSchemaBuilder extends AbstractFilterSchemaBuilder
         ];
     }
 
-    protected function buildSchema(Filter $filter): array
+    public function build(Filter $filter): array
     {
         $label = $this->translateLabel($filter->getLabel());
         $formOptions = $filter->getFormOptions();
@@ -39,13 +40,23 @@ final class EntityFilterSchemaBuilder extends AbstractFilterSchemaBuilder
             return [
                 'type' => 'array',
                 'items' => ['type' => 'string'],
-                'description' => sprintf('%s - search by %s. Accepts multiple values.', $label, $choiceLabel),
+                'description' => $this->buildDescriptionMultiple($label, $choiceLabel),
             ];
         }
 
         return [
             'type' => 'string',
-            'description' => sprintf('%s - search by %s', $label, $choiceLabel),
+            'description' => $this->buildDescription($label, $choiceLabel),
         ];
+    }
+
+    protected function buildDescription(string $label, string $choiceLabel): string
+    {
+        return sprintf('%s - search by %s. Omit if not mentioned by the user.', $label, $choiceLabel);
+    }
+
+    protected function buildDescriptionMultiple(string $label, string $choiceLabel): string
+    {
+        return sprintf('%s - search by %s. Accepts multiple values. Omit if not mentioned by the user.', $label, $choiceLabel);
     }
 }

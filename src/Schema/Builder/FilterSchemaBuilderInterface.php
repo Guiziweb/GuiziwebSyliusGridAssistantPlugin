@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Guiziweb\SyliusGridAssistantPlugin\Schema;
+namespace Guiziweb\SyliusGridAssistantPlugin\Schema\Builder;
 
 use Sylius\Component\Grid\Definition\Filter;
 

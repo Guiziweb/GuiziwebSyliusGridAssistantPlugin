@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Guiziweb\SyliusGridAssistantPlugin\Schema;
+namespace Guiziweb\SyliusGridAssistantPlugin\Schema\Builder;
 
 final class FilterSchemaBuilderRegistry
 {
