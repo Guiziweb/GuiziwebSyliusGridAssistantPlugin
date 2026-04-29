@@ -2,6 +2,7 @@
 /vendor/
 /node_modules/
 /composer.lock
+/yarn.lock
 
 # Build artifacts
 /etc/build/*
