@@ -20,3 +20,7 @@ services:
     mailhog:
         # do not use in production!
         image: mailhog/mailhog:latest
+    chrome:
+        image: zenika/alpine-chrome
+        command: --no-sandbox --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 --remote-allow-origins=*
+        shm_size: 2gb
