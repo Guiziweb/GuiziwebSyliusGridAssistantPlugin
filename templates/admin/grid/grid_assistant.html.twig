@@ -6,7 +6,7 @@
     {% set route_params = app.request.attributes.all('_route_params')|json_encode %}
     {% set ai_query = app.request.query.get('ai_query', '') %}
 
-    <twig:guiziweb:grid_assistant:ai_search
+    <twig:guiziweb:grid_assistant:search
         gridCode="{{ grid_code }}"
         routeName="{{ current_route }}"
         routeParams="{{ route_params }}"

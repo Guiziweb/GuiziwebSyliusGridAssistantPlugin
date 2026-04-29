@@ -1,5 +1,8 @@
 guiziweb:
     grid_assistant:
         placeholder: "Describe what you are looking for..."
-        search_button: "AI Search"
+        query_not_blank: "Please enter a search query."
+        search_button: "Search"
         searching: "Searching..."
+        rate_limit_exceeded: "Too many requests. Try again in %seconds% seconds."
+        rate_limit_unauthenticated: "Authentication required."

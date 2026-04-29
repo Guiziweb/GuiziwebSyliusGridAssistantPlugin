@@ -1,2 +1,1 @@
-guiziweb_sylius_grid_assistant_plugin_admin:
-    resource: "@GuiziwebSyliusGridAssistantPlugin/config/routes/admin.yaml"
+# No custom routes

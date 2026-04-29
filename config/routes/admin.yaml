@@ -1,3 +1,0 @@
-guiziweb_grid_assistant_admin:
-    resource: '@GuiziwebSyliusGridAssistantPlugin/src/Controller/'
-    type: attribute

@@ -2,6 +2,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+        bind:
+            $aiQueryLimiter: '@limiter.guiziweb_grid_assistant'
 
     Guiziweb\SyliusGridAssistantPlugin\:
         resource: '../src/*'
@@ -10,29 +12,10 @@ services:
     Symfony\UX\Autocomplete\AutocompleterRegistry:
         alias: 'ux.autocomplete.autocompleter_registry'
 
-    # Grid context is request-scoped
-    Guiziweb\SyliusGridAssistantPlugin\Context\GridContext:
-        shared: true
-
-    # Tool enricher - tagged to be picked up by DynamicDescriptionToolFactory
-    Guiziweb\SyliusGridAssistantPlugin\Toolbox\FilterGridToolEnricher:
-        tags:
-            - { name: 'guiziweb.grid_assistant.tool_enricher' }
-
-    # Dynamic tool factory - decorates the default factory to enrich tool descriptions
-    Guiziweb\SyliusGridAssistantPlugin\Toolbox\DynamicDescriptionToolFactory:
-        decorates: 'ai.tool_factory'
-        arguments:
-            $decorated: '@.inner'
-            $enrichers: !tagged_iterator 'guiziweb.grid_assistant.tool_enricher'
-
-    # Extracts ToolCallResult from ChoiceResult before AgentProcessor (priority -10) runs
-    Guiziweb\SyliusGridAssistantPlugin\OutputProcessor\ChoiceResultOutputProcessor:
-        tags:
-            - { name: 'ai.agent.output_processor', agent: 'ai.agent.grid_assistant', priority: 0 }
-
-    # GridQueryProcessor - injects the grid_assistant agent
-    # User must configure an agent named 'grid_assistant' in config/packages/ai.yaml
     Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessor:
         arguments:
-            $agent: '@ai.agent.grid_assistant'
+            $model: '%guiziweb.grid_assistant.model%'
+
+    Guiziweb\SyliusGridAssistantPlugin\Twig\Component\GridAssistantComponent:
+        tags:
+            - { name: 'sylius.live_component.admin', key: 'guiziweb:grid_assistant:search', template: '@GuiziwebSyliusGridAssistantPlugin/components/grid_assistant.html.twig' }

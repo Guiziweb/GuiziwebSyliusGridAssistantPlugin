@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Guiziweb\SyliusGridAssistantPlugin\Service;
+namespace Guiziweb\SyliusGridAssistantPlugin\Schema;
 
 use Guiziweb\SyliusGridAssistantPlugin\Schema\Builder\FilterSchemaBuilderRegistry;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\Builder\TranslateLabelTrait;
@@ -53,8 +53,6 @@ final readonly class GridSchemaBuilder
     }
 
     /**
-     * Build schema for all filters.
-     *
      * @return array<string, array<string, mixed>>
      */
     private function buildFiltersSchema(Grid $grid): array
@@ -69,8 +67,6 @@ final readonly class GridSchemaBuilder
     }
 
     /**
-     * Build schema for a single filter.
-     *
      * @return array<string, mixed>
      */
     private function buildFilterSchema(Filter $filter): array
@@ -85,8 +81,6 @@ final readonly class GridSchemaBuilder
     }
 
     /**
-     * Build schema for sortable fields.
-     *
      * @return array<string, array{label: string, path: string|null}>
      */
     private function buildSortableFieldsSchema(Grid $grid): array
@@ -105,9 +99,6 @@ final readonly class GridSchemaBuilder
         return $sortableFields;
     }
 
-    /**
-     * Extract entity class from grid driver configuration.
-     */
     private function extractEntityClass(Grid $grid): ?string
     {
         $driverConfig = $grid->getDriverConfiguration();
@@ -116,9 +107,6 @@ final readonly class GridSchemaBuilder
         return is_string($class) ? $class : null;
     }
 
-    /**
-     * Check if a grid exists.
-     */
     public function gridExists(string $gridCode): bool
     {
         try {

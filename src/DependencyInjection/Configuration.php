@@ -13,7 +13,15 @@ final class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('guiziweb_sylius_grid_assistant');
 
-        $treeBuilder->getRootNode();
+        $treeBuilder->getRootNode()
+            ->children()
+                ->scalarNode('model')
+                    ->defaultValue('gpt-4o')
+                    ->cannotBeEmpty()
+                    ->info('The LLM model name to use. Must match the platform configured in symfony/ai-bundle (e.g. "gpt-4o", "claude-sonnet-4-6").')
+                ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

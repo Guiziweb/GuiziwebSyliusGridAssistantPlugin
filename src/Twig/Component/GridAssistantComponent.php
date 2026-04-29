@@ -7,16 +7,14 @@ namespace Guiziweb\SyliusGridAssistantPlugin\Twig\Component;
 use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessor;
 use Sylius\TwigHooks\LiveComponent\HookableLiveComponentTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(
-    name: 'guiziweb:grid_assistant:ai_search',
-    template: '@GuiziwebSyliusGridAssistantPlugin/components/ai_search.html.twig',
-)]
-final class AiSearchComponent
+#[AsLiveComponent]
+final class GridAssistantComponent
 {
     use DefaultActionTrait;
     use HookableLiveComponentTrait;
@@ -38,6 +36,7 @@ final class AiSearchComponent
 
     public function __construct(
         private readonly GridQueryProcessor $queryProcessor,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -47,7 +46,7 @@ final class AiSearchComponent
         $this->error = null;
 
         if (empty(trim($this->query))) {
-            $this->error = 'Please enter a search query.';
+            $this->error = $this->translator->trans('guiziweb.grid_assistant.query_not_blank');
 
             return null;
         }
@@ -68,18 +67,12 @@ final class AiSearchComponent
             return null;
         }
 
-        // Build redirect URL — redirect_url is guaranteed present since 'error' was not set
         $redirectUrl = $result['redirect_url'] ?? null;
         if (null === $redirectUrl) {
             return null;
         }
 
         $redirectUrl .= (str_contains($redirectUrl, '?') ? '&' : '?') . 'ai_query=' . urlencode($this->query);
-
-        // Add warnings to URL if any (will be displayed via flash message)
-        if (isset($result['warnings']) && !empty($result['warnings'])) {
-            $redirectUrl .= '&ai_warning=' . urlencode(implode('. ', $result['warnings']));
-        }
 
         return new RedirectResponse($redirectUrl);
     }
