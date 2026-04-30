@@ -77,7 +77,7 @@
             "dev-main": "1.0-dev"
         },
         "symfony": {
-            "require": "^7.3"
+            "require": "^7.4"
         },
         "public-dir": "vendor/sylius/test-application/public"
     },
