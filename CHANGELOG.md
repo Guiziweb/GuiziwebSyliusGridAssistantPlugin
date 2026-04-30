@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/compare/v0.2.0...v0.3.0) (2026-04-30)
+
+
+### Features
+
+* **schema:** add filter value formatter layer ([b2767c9](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/b2767c9c63861bf10a5b700c144976da7eae5cb5))
+
+
+### Bug Fixes
+
+* **deps:** pin api-platform/symfony ^4.3 to fix sylius/typeinfo issue 18878 ([a2804cd](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/a2804cd739a409a1a3de5911c431764f2daa3b95))
+* **deps:** pin symfony/type-info &lt;7.4 to fix sylius issue 18878 ([6651c38](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/6651c38a4e928f555dce6e357cac27d42b19a764))
+* **phpstan:** resolve all static analysis errors to level max ([2360fa5](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/2360fa5c7fb317563cb95a2768f1cd4b7d5c5488))
+
 ## [0.2.0](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/compare/v0.1.0...v0.2.0) (2026-04-06)
 
 
