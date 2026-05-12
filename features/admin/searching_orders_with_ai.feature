@@ -74,3 +74,17 @@ Feature: Searching orders using AI assistant
         When I browse orders
         And I search for "orders shipped with DHL Express" using the AI assistant
         Then I should see a single order from customer "jane.doe@gmail.com"
+
+    Scenario: Sorting orders by total descending
+        Given there is a customer account "john.doe@gmail.com"
+        And the store has a product "Cheap mug" priced at "$10.00"
+        And the store has a product "Expensive watch" priced at "$500.00"
+        And there is a customer "john.doe@gmail.com" that placed an order "#00000001"
+        And the customer bought a single "Expensive watch"
+        And the customer chose "Free" shipping method to "United States" with "Cash on Delivery" payment
+        And there is a customer "john.doe@gmail.com" that placed an order "#00000002"
+        And the customer bought a single "Cheap mug"
+        And the customer chose "Free" shipping method to "United States" with "Cash on Delivery" payment
+        When I browse orders
+        And I search for "orders sorted by total descending" using the AI assistant
+        Then the first order should have number "#00000001"
