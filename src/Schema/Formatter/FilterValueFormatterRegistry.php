@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter;
 
-final class FilterValueFormatterRegistry
+final class FilterValueFormatterRegistry implements FilterValueFormatterRegistryInterface
 {
     /** @var array<string, FilterValueFormatterInterface> */
     private array $formatters = [];
