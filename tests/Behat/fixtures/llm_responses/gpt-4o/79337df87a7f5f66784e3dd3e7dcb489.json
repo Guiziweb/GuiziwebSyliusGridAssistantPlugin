@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "content": {
+        "criteria": {
+            "state": "new",
+            "product": null,
+            "variant": null,
+            "number": null,
+            "customer": null,
+            "date": null,
+            "channel": null,
+            "total": null,
+            "shipping_method": null
+        },
+        "sorting": {
+            "number": null,
+            "date": null,
+            "customer": null,
+            "channel": null,
+            "state": null,
+            "paymentState": null,
+            "shippingState": null,
+            "total": null,
+            "currencyCode": null
+        },
+        "message": "Filtered orders to show only those with the state 'new'."
+    }
+}

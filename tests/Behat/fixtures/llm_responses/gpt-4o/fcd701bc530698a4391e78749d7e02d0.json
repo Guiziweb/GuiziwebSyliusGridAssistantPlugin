@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "content": {
+        "criteria": {
+            "state": null,
+            "product": null,
+            "variant": null,
+            "number": null,
+            "customer": null,
+            "date": null,
+            "channel": null,
+            "total": null,
+            "shipping_method": "DHL Express"
+        },
+        "sorting": {
+            "number": null,
+            "date": null,
+            "customer": null,
+            "channel": null,
+            "state": null,
+            "paymentState": null,
+            "shippingState": null,
+            "total": null,
+            "currencyCode": null
+        },
+        "message": "Filtered orders that were shipped with DHL Express."
+    }
+}

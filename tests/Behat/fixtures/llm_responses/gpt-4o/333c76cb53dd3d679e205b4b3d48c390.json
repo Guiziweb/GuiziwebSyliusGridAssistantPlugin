@@ -1,0 +1,31 @@
+{
+    "type": "object",
+    "content": {
+        "criteria": {
+            "state": null,
+            "product": null,
+            "variant": null,
+            "number": null,
+            "customer": null,
+            "date": {
+                "start": "2026-05-05",
+                "end": "2026-05-12"
+            },
+            "channel": null,
+            "total": null,
+            "shipping_method": null
+        },
+        "sorting": {
+            "number": null,
+            "date": null,
+            "customer": null,
+            "channel": null,
+            "state": null,
+            "paymentState": null,
+            "shippingState": null,
+            "total": null,
+            "currencyCode": null
+        },
+        "message": "Filtered orders from the last 7 days, from 2026-05-05 to 2026-05-12."
+    }
+}
