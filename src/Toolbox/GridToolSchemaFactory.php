@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Toolbox;
 
-final class GridToolSchemaFactory
+final class GridToolSchemaFactory implements GridToolSchemaFactoryInterface
 {
     /**
      * @param array<string, mixed> $gridSchema

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Processor;
 
-use Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter\FilterValueFormatterRegistry;
-use Guiziweb\SyliusGridAssistantPlugin\Schema\GridSchemaBuilder;
-use Guiziweb\SyliusGridAssistantPlugin\Toolbox\GridToolSchemaFactory;
+use Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter\FilterValueFormatterRegistryInterface;
+use Guiziweb\SyliusGridAssistantPlugin\Schema\GridSchemaBuilderInterface;
+use Guiziweb\SyliusGridAssistantPlugin\Toolbox\GridToolSchemaFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Definition\Grid;
 use Sylius\Component\Grid\Provider\GridProviderInterface;
@@ -29,9 +29,9 @@ final readonly class GridQueryProcessor
     public function __construct(
         private PlatformInterface $platform,
         private string $model,
-        private GridSchemaBuilder $schemaBuilder,
-        private GridToolSchemaFactory $schemaFactory,
-        private FilterValueFormatterRegistry $formatterRegistry,
+        private GridSchemaBuilderInterface $schemaBuilder,
+        private GridToolSchemaFactoryInterface $schemaFactory,
+        private FilterValueFormatterRegistryInterface $formatterRegistry,
         private UrlGeneratorInterface $urlGenerator,
         private LoggerInterface $aiLogger,
         private RateLimiterFactoryInterface $aiQueryLimiter,

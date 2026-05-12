@@ -16,7 +16,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Builds a JSON schema describing all available filters and sortable fields for a grid.
  * This schema is used by the AI to understand what filtering options are available.
  */
-final readonly class GridSchemaBuilder
+final readonly class GridSchemaBuilder implements GridSchemaBuilderInterface
 {
     use TranslateLabelTrait;
 
