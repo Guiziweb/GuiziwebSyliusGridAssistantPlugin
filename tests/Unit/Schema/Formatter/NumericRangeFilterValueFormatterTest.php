@@ -22,6 +22,11 @@ final class NumericRangeFilterValueFormatterTest extends TestCase
         return Filter::fromNameAndType('price', 'numeric_range');
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame('numeric_range', NumericRangeFilterValueFormatter::getType());
+    }
+
     public function testFormatGreaterThan(): void
     {
         $result = $this->formatter->format(['greaterThan' => 10], $this->filter());

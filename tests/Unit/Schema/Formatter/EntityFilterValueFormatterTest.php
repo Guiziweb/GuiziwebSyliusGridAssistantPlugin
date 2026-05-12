@@ -52,6 +52,14 @@ final class EntityFilterValueFormatterTest extends TestCase
         return $filter;
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame(
+            ['entity', 'ux_autocomplete', 'ux_translatable_autocomplete', 'resource_autocomplete'],
+            EntityFilterValueFormatter::getType(),
+        );
+    }
+
     public function testFormatIntegerIdPassthrough(): void
     {
         $result = $this->formatter->format(42, $this->filter());
@@ -102,6 +110,30 @@ final class EntityFilterValueFormatterTest extends TestCase
         $result = $this->formatter->format('John Doe', $this->filter());
 
         self::assertSame(7, $result->value);
+        self::assertEmpty($result->warnings);
+    }
+
+    public function testFormatStringSearchUsesTranslatableAutocompleterForUxTranslatableType(): void
+    {
+        $entity = new \stdClass();
+        $query = $this->createMock(\Doctrine\ORM\Query::class);
+        $query->method('getResult')->willReturn([$entity]);
+
+        $qb = $this->createMock(QueryBuilder::class);
+        $qb->method('setMaxResults')->willReturnSelf();
+        $qb->method('getQuery')->willReturn($query);
+
+        $repository = $this->createMock(EntityRepository::class);
+
+        $this->autocompleter->method('getEntityClass')->willReturn(\stdClass::class);
+        $this->autocompleter->method('createFilteredQueryBuilder')->willReturn($qb);
+        $this->autocompleter->method('getValue')->willReturn('12');
+
+        $this->entityManager->method('getRepository')->willReturn($repository);
+
+        $result = $this->formatter->format('Some Product', $this->filter('ux_translatable_autocomplete'));
+
+        self::assertSame(12, $result->value);
         self::assertEmpty($result->warnings);
     }
 

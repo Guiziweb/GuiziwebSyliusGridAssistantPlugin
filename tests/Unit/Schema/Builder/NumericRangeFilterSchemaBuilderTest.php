@@ -29,6 +29,11 @@ final class NumericRangeFilterSchemaBuilderTest extends TestCase
         return $filter;
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame('numeric_range', NumericRangeFilterSchemaBuilder::getType());
+    }
+
     public function testBuildReturnsObjectType(): void
     {
         $schema = $this->builder->build($this->filter());

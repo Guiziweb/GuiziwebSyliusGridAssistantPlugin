@@ -7,6 +7,7 @@ namespace Guiziweb\SyliusGridAssistantPlugin\Tests\Unit\Schema\Formatter;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter\StringFilterValueFormatter;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Grid\Definition\Filter;
+use Sylius\Component\Grid\Filter\StringFilter;
 
 final class StringFilterValueFormatterTest extends TestCase
 {
@@ -23,6 +24,11 @@ final class StringFilterValueFormatterTest extends TestCase
         $filter->setOptions($options);
 
         return $filter;
+    }
+
+    public function testGetType(): void
+    {
+        self::assertSame(StringFilter::NAME, StringFilterValueFormatter::getType());
     }
 
     public function testFormatObjectWithValue(): void
