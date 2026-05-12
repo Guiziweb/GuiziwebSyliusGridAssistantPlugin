@@ -30,6 +30,14 @@ final class EntityFilterSchemaBuilderTest extends TestCase
         return $filter;
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame(
+            ['entity', 'ux_autocomplete', 'ux_translatable_autocomplete', 'resource_autocomplete'],
+            EntityFilterSchemaBuilder::getType(),
+        );
+    }
+
     public function testBuildSingleReturnsStringType(): void
     {
         $schema = $this->builder->build($this->filter());

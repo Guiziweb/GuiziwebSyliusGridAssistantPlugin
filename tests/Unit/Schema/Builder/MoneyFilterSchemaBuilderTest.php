@@ -40,6 +40,11 @@ final class MoneyFilterSchemaBuilderTest extends TestCase
         return $filter;
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame('money', MoneyFilterSchemaBuilder::getType());
+    }
+
     public function testBuildReturnsObjectType(): void
     {
         $schema = $this->builder->build($this->filter());

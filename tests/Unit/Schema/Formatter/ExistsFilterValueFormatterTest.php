@@ -22,6 +22,11 @@ final class ExistsFilterValueFormatterTest extends TestCase
         return Filter::fromNameAndType('hasStock', 'exists');
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame('exists', ExistsFilterValueFormatter::getType());
+    }
+
     /**
      * Sylius ExistsFilter uses (bool) $data.
      * The formatter must return actual booleans so (bool) 'false' !== true bug is avoided.

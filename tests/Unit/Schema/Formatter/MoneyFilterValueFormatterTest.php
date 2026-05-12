@@ -22,6 +22,11 @@ final class MoneyFilterValueFormatterTest extends TestCase
         return Filter::fromNameAndType('total', 'money');
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame('money', MoneyFilterValueFormatter::getType());
+    }
+
     public function testFormatGreaterThan(): void
     {
         $result = $this->formatter->format(['greaterThan' => 100.0], $this->filter());

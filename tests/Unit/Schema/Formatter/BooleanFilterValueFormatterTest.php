@@ -22,6 +22,11 @@ final class BooleanFilterValueFormatterTest extends TestCase
         return Filter::fromNameAndType('enabled', 'boolean');
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame('boolean', BooleanFilterValueFormatter::getType());
+    }
+
     public function testFormatBoolTrue(): void
     {
         $result = $this->formatter->format(true, $this->filter());

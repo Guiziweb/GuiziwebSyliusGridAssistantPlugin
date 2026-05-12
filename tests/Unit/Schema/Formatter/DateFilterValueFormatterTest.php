@@ -7,6 +7,7 @@ namespace Guiziweb\SyliusGridAssistantPlugin\Tests\Unit\Schema\Formatter;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter\DateFilterValueFormatter;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Grid\Definition\Filter;
+use Sylius\Component\Grid\Filter\DateFilter;
 
 final class DateFilterValueFormatterTest extends TestCase
 {
@@ -20,6 +21,11 @@ final class DateFilterValueFormatterTest extends TestCase
     private function filter(): Filter
     {
         return Filter::fromNameAndType('createdAt', 'date');
+    }
+
+    public function testGetType(): void
+    {
+        self::assertSame(DateFilter::NAME, DateFilterValueFormatter::getType());
     }
 
     public function testFormatStartAndEnd(): void

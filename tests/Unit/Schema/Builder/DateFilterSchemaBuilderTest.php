@@ -7,6 +7,7 @@ namespace Guiziweb\SyliusGridAssistantPlugin\Tests\Unit\Schema\Builder;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\Builder\DateFilterSchemaBuilder;
 use PHPUnit\Framework\TestCase;
 use Sylius\Component\Grid\Definition\Filter;
+use Sylius\Component\Grid\Filter\DateFilter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class DateFilterSchemaBuilderTest extends TestCase
@@ -27,6 +28,11 @@ final class DateFilterSchemaBuilderTest extends TestCase
         $filter->setLabel($label);
 
         return $filter;
+    }
+
+    public function testGetType(): void
+    {
+        self::assertSame(DateFilter::NAME, DateFilterSchemaBuilder::getType());
     }
 
     public function testBuildReturnsObjectType(): void

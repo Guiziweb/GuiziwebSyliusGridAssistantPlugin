@@ -30,6 +30,11 @@ final class SelectFilterSchemaBuilderTest extends TestCase
         return $filter;
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame(['select', 'enum'], SelectFilterSchemaBuilder::getType());
+    }
+
     public function testBuildSingleReturnsStringTypeWithEnum(): void
     {
         $filter = $this->filter('State', ['choices' => ['New' => 'new', 'Fulfilled' => 'fulfilled']]);

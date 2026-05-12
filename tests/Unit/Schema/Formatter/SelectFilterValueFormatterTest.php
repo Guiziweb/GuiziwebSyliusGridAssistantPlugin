@@ -25,6 +25,11 @@ final class SelectFilterValueFormatterTest extends TestCase
         return $filter;
     }
 
+    public function testGetType(): void
+    {
+        self::assertSame(['select', 'enum'], SelectFilterValueFormatter::getType());
+    }
+
     public function testFormatValidChoice(): void
     {
         $filter = $this->filter(['choices' => ['New' => 'new', 'Fulfilled' => 'fulfilled']]);
