@@ -60,6 +60,10 @@ final readonly class GridSchemaBuilder implements GridSchemaBuilderInterface
         $filters = [];
 
         foreach ($grid->getEnabledFilters() as $name => $filter) {
+            if (false === ($filter->getOptions()['ai_searchable'] ?? true)) {
+                continue;
+            }
+
             $filters[$name] = $this->buildFilterSchema($filter);
         }
 
@@ -88,12 +92,18 @@ final readonly class GridSchemaBuilder implements GridSchemaBuilderInterface
         $sortableFields = [];
 
         foreach ($grid->getEnabledFields() as $name => $field) {
-            if ($field->isSortable()) {
-                $sortableFields[$name] = [
-                    'label' => $this->translateLabel($field->getLabel()),
-                    'path' => $field->getSortable(),
-                ];
+            if (!$field->isSortable()) {
+                continue;
             }
+
+            if (false === ($field->getOptions()['ai_searchable'] ?? true)) {
+                continue;
+            }
+
+            $sortableFields[$name] = [
+                'label' => $this->translateLabel($field->getLabel()),
+                'path' => $field->getSortable(),
+            ];
         }
 
         return $sortableFields;

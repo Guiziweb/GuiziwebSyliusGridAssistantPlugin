@@ -20,6 +20,11 @@ final class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->info('The LLM model name to use. Must match the platform configured in symfony/ai-bundle (e.g. "gpt-4o", "claude-sonnet-4-6").')
                 ->end()
+                ->arrayNode('enabled_grids')
+                    ->scalarPrototype()->end()
+                    ->defaultValue([])
+                    ->info('Grid codes where the AI assistant is enabled. Opt-in: empty by default.')
+                ->end()
             ->end()
         ;
 

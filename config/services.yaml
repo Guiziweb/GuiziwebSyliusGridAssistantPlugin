@@ -16,6 +16,10 @@ services:
         arguments:
             $model: '%guiziweb.grid_assistant.model%'
 
+    Guiziweb\SyliusGridAssistantPlugin\Twig\Extension\GridAssistantExtension:
+        arguments:
+            $enabledGrids: '%guiziweb.grid_assistant.enabled_grids%'
+
     Guiziweb\SyliusGridAssistantPlugin\Twig\Component\GridAssistantComponent:
         tags:
             - { name: 'sylius.live_component.admin', key: 'guiziweb:grid_assistant:search', template: '@GuiziwebSyliusGridAssistantPlugin/components/grid_assistant.html.twig' }
