@@ -20,7 +20,7 @@ final readonly class GridQueryResolver implements GridQueryResolverInterface
      * @param non-empty-string $model
      */
     public function __construct(
-        private PlatformInterface $platform,
+        private ?PlatformInterface $platform,
         private string $model,
         private GridSchemaBuilderInterface $schemaBuilder,
         private GridToolSchemaFactoryInterface $schemaFactory,
@@ -31,6 +31,10 @@ final readonly class GridQueryResolver implements GridQueryResolverInterface
 
     public function resolve(string $query, string $gridCode): ResolvedGridQuery
     {
+        if (null === $this->platform) {
+            throw new GridQueryResolverException('No AI platform configured. Install a bridge: composer require symfony/ai-openai-platform (or symfony/ai-gemini-platform, symfony/ai-anthropic-platform, symfony/ai-mistral-platform) and configure ai.platform.<provider> in your config.');
+        }
+
         $gridSchema = $this->schemaBuilder->buildSchema($gridCode);
         $parametersSchema = $this->schemaFactory->buildParameters($gridSchema);
 
