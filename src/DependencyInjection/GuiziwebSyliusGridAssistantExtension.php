@@ -21,6 +21,7 @@ final class GuiziwebSyliusGridAssistantExtension extends AbstractResourceExtensi
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('guiziweb.grid_assistant.model', $config['model']);
+        $container->setParameter('guiziweb.grid_assistant.enabled_grids', $config['enabled_grids']);
     }
 
     public function prepend(ContainerBuilder $container): void

@@ -1,0 +1,3 @@
+guiziweb_sylius_grid_assistant:
+    enabled_grids:
+        - sylius_admin_order
