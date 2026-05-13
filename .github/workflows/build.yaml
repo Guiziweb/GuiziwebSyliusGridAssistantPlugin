@@ -43,7 +43,7 @@ jobs:
                 with:
                     php-version: "${{ matrix.php }}"
                     extensions: intl
-                    tools: flex, symfony
+                    tools: composer:v2.9.8, flex, symfony
                     coverage: none
 
             -
