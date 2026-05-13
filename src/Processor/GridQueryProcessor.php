@@ -7,6 +7,7 @@ namespace Guiziweb\SyliusGridAssistantPlugin\Processor;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter\FilterValueFormatterRegistryInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\GridSchemaBuilderInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Toolbox\GridToolSchemaFactoryInterface;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Definition\Grid;
 use Sylius\Component\Grid\Provider\GridProviderInterface;
@@ -37,6 +38,7 @@ final readonly class GridQueryProcessor
         private RateLimiterFactoryInterface $aiQueryLimiter,
         private Security $security,
         private TranslatorInterface $translator,
+        private ClockInterface $clock,
         #[Autowire(service: 'sylius.grid.chain_provider')]
         private GridProviderInterface $gridProvider,
     ) {
@@ -78,7 +80,7 @@ final readonly class GridQueryProcessor
             "- sorting: all sorting fields are always present. Set to null any field the user did not explicitly ask to sort by.\n" .
             "- message: write a short natural language summary of what you applied, or explain why no filter could be applied if the query is too vague.\n" .
             '- Today is %s.',
-            (new \DateTimeImmutable())->format('Y-m-d'),
+            $this->clock->now()->format('Y-m-d'),
         );
 
         $messages = new MessageBag(

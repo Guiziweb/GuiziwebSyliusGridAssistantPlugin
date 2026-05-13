@@ -23,6 +23,6 @@
             "total": null,
             "currencyCode": null
         },
-        "message": "Filtered orders to show only those with the state 'new'."
+        "message": "Filtered for orders with a status of 'new'."
     }
 }

@@ -9,6 +9,7 @@ use Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter\FilterValueFormatterRegi
 use Guiziweb\SyliusGridAssistantPlugin\Schema\GridSchemaBuilderInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Toolbox\GridToolSchemaFactoryInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Provider\GridProviderInterface;
 use Symfony\AI\Platform\PlatformInterface;
@@ -135,6 +136,7 @@ final class GridQueryProcessorTest extends TestCase
             $rateLimiterFactory,
             $security,
             $translator ?? $this->createMock(TranslatorInterface::class),
+            $this->createMock(ClockInterface::class),
             $this->createMock(GridProviderInterface::class),
         );
     }
