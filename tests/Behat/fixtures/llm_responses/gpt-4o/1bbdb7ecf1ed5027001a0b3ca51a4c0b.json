@@ -23,6 +23,6 @@
             "total": null,
             "currencyCode": null
         },
-        "message": "Filtering orders for the customer with email: john.doe@gmail.com."
+        "message": "Filtered orders to show only those from the customer with the email 'john.doe@gmail.com'."
     }
 }

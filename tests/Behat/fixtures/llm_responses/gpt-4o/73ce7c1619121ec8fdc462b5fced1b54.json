@@ -7,13 +7,12 @@
             "variant": null,
             "number": null,
             "customer": null,
-            "date": null,
-            "channel": null,
-            "total": {
-                "greaterThan": 100,
-                "lessThan": null,
-                "currency": "USD"
+            "date": {
+                "start": "2025-12-25",
+                "end": "2026-01-01"
             },
+            "channel": null,
+            "total": null,
             "shipping_method": null
         },
         "sorting": {
@@ -27,6 +26,6 @@
             "total": null,
             "currencyCode": null
         },
-        "message": "Filtered orders to show only those with a total over $100."
+        "message": "Filtered orders from the last 7 days, between 2025-12-25 and 2026-01-01."
     }
 }

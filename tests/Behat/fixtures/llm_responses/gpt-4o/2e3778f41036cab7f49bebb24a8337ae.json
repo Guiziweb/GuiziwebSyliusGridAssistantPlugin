@@ -23,6 +23,6 @@
             "total": "desc",
             "currencyCode": null
         },
-        "message": "Sorted orders by total in descending order."
+        "message": "Sorting orders by total in descending order."
     }
 }

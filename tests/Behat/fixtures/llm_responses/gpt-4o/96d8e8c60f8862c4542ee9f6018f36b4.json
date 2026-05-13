@@ -7,12 +7,13 @@
             "variant": null,
             "number": null,
             "customer": null,
-            "date": {
-                "start": "2026-05-05",
-                "end": "2026-05-12"
-            },
+            "date": null,
             "channel": null,
-            "total": null,
+            "total": {
+                "greaterThan": 100,
+                "lessThan": null,
+                "currency": "USD"
+            },
             "shipping_method": null
         },
         "sorting": {
@@ -26,6 +27,6 @@
             "total": null,
             "currencyCode": null
         },
-        "message": "Filtered orders from the last 7 days, from 2026-05-05 to 2026-05-12."
+        "message": "Filtered orders with a total over $100 USD."
     }
 }

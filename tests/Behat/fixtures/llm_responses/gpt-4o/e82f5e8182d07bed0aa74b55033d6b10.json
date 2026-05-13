@@ -3,9 +3,11 @@
     "content": {
         "criteria": {
             "state": null,
-            "product": null,
+            "product": [
+                "PHP T-Shirt"
+            ],
             "variant": null,
-            "number": "00000022",
+            "number": null,
             "customer": null,
             "date": null,
             "channel": null,
@@ -23,6 +25,6 @@
             "total": null,
             "currencyCode": null
         },
-        "message": "Filtered by order number #00000022."
+        "message": "Filtered orders to show those containing PHP T-Shirt."
     }
 }

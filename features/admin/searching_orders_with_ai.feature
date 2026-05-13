@@ -107,9 +107,9 @@ Feature: Searching orders using AI assistant
 
     Scenario: Filtering orders by relative date
         Given there is a customer account "john.doe@gmail.com"
-        And this customer has placed an order "#00000001" at "2 days ago"
+        And this customer has placed an order "#00000001" at "2025-12-30"
         And there is a customer account "jane.doe@gmail.com"
-        And this customer has placed an order "#00000002" at "30 days ago"
+        And this customer has placed an order "#00000002" at "2025-12-02"
         When I browse orders
         And I search for "orders from the last 7 days" using the AI assistant
         Then I should see a single order in the list

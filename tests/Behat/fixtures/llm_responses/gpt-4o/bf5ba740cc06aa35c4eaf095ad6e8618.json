@@ -5,12 +5,12 @@
             "state": null,
             "product": null,
             "variant": null,
-            "number": null,
+            "number": "00000022",
             "customer": null,
             "date": null,
             "channel": null,
             "total": null,
-            "shipping_method": "DHL Express"
+            "shipping_method": null
         },
         "sorting": {
             "number": null,
@@ -23,6 +23,6 @@
             "total": null,
             "currencyCode": null
         },
-        "message": "Filtered orders that were shipped with DHL Express."
+        "message": "Filtered orders to show only order number #00000022."
     }
 }
