@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Twig\Component;
 
-use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessor;
+use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessorException;
+use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessorInterface;
 use Sylius\TwigHooks\LiveComponent\HookableLiveComponentTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -35,7 +36,7 @@ final class GridAssistantComponent
     public ?string $error = null;
 
     public function __construct(
-        private readonly GridQueryProcessor $queryProcessor,
+        private readonly GridQueryProcessorInterface $queryProcessor,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -54,21 +55,16 @@ final class GridAssistantComponent
         /** @var array<string, mixed> $routeParams */
         $routeParams = (array) (json_decode($this->routeParams, true) ?? []);
 
-        $result = $this->queryProcessor->process(
-            $this->query,
-            $this->gridCode,
-            $this->routeName,
-            $routeParams,
-        );
+        try {
+            $redirectUrl = $this->queryProcessor->process(
+                $this->query,
+                $this->gridCode,
+                $this->routeName,
+                $routeParams,
+            );
+        } catch (GridQueryProcessorException $e) {
+            $this->error = $e->getMessage();
 
-        if (isset($result['error'])) {
-            $this->error = $result['error'];
-
-            return null;
-        }
-
-        $redirectUrl = $result['redirect_url'] ?? null;
-        if (null === $redirectUrl) {
             return null;
         }
 
