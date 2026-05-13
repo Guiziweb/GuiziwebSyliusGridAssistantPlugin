@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace Guiziweb\SyliusGridAssistantPlugin\Tests\Unit\Processor;
 
 use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessor;
-use Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter\FilterValueFormatterRegistryInterface;
+use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessorException;
+use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverException;
+use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\GridSchemaBuilderInterface;
-use Guiziweb\SyliusGridAssistantPlugin\Toolbox\GridToolSchemaFactoryInterface;
+use Guiziweb\SyliusGridAssistantPlugin\Validator\GridCriteriaValidatorInterface;
+use Guiziweb\SyliusGridAssistantPlugin\Validator\GridSortingValidatorInterface;
 use PHPUnit\Framework\TestCase;
-use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Provider\GridProviderInterface;
-use Symfony\AI\Platform\PlatformInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimit;
@@ -23,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class GridQueryProcessorTest extends TestCase
 {
-    public function testReturnsErrorWhenUserIsNotAuthenticated(): void
+    public function testThrowsWhenUserIsNotAuthenticated(): void
     {
         $security = $this->createMock(Security::class);
         $security->method('getUser')->willReturn(null);
@@ -33,12 +34,13 @@ final class GridQueryProcessorTest extends TestCase
 
         $processor = $this->makeProcessor(security: $security, translator: $translator);
 
-        $result = $processor->process('any query', 'sylius_admin_order', 'sylius_admin_order_index', []);
+        $this->expectException(GridQueryProcessorException::class);
+        $this->expectExceptionMessage('rate_limit_unauthenticated');
 
-        self::assertSame(['error' => 'rate_limit_unauthenticated'], $result);
+        $processor->process('any query', 'sylius_admin_order', 'sylius_admin_order_index', []);
     }
 
-    public function testReturnsErrorWhenRateLimitIsExceeded(): void
+    public function testThrowsWhenRateLimitIsExceeded(): void
     {
         $rateLimit = new RateLimit(0, new \DateTimeImmutable('+42 seconds'), false, 10);
 
@@ -57,53 +59,64 @@ final class GridQueryProcessorTest extends TestCase
 
         $processor = $this->makeProcessor(rateLimiterFactory: $factory, translator: $translator);
 
-        $result = $processor->process('any query', 'sylius_admin_order', 'sylius_admin_order_index', []);
+        $this->expectException(GridQueryProcessorException::class);
+        $this->expectExceptionMessageMatches('/Rate limit exceeded.+seconds/');
 
-        self::assertArrayHasKey('error', $result);
-        self::assertStringContainsString('Rate limit exceeded', $result['error']);
-        self::assertStringContainsString('seconds', $result['error']);
+        $processor->process('any query', 'sylius_admin_order', 'sylius_admin_order_index', []);
     }
 
-    public function testReturnsErrorWhenPlatformInvokeThrows(): void
+    public function testThrowsTranslatedExceptionWhenResolverFails(): void
     {
-        $platform = $this->createMock(PlatformInterface::class);
-        $platform->method('invoke')->willThrowException(new \RuntimeException('LLM down'));
+        $resolver = $this->createMock(GridQueryResolverInterface::class);
+        $resolver->method('resolve')->willThrowException(new GridQueryResolverException('LLM down'));
 
         $schemaBuilder = $this->createMock(GridSchemaBuilderInterface::class);
         $schemaBuilder->method('gridExists')->willReturn(true);
-        $schemaBuilder->method('buildSchema')->willReturn([
-            'grid_code' => 'sylius_admin_order',
-            'entity_class' => null,
-            'filters' => [],
-            'sortable_fields' => [],
-            'default_sorting' => [],
-        ]);
 
-        $schemaFactory = $this->createMock(GridToolSchemaFactoryInterface::class);
-        $schemaFactory->method('buildParameters')->willReturn([
-            'type' => 'object',
-            'properties' => [],
-            'required' => [],
-            'additionalProperties' => false,
-        ]);
-
-        $processor = $this->makeProcessor(
-            platform: $platform,
-            schemaBuilder: $schemaBuilder,
-            schemaFactory: $schemaFactory,
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturnCallback(
+            static fn (string $id) => 'guiziweb.grid_assistant.ai_processing_failed' === $id
+                ? 'AI processing failed. Please try again.'
+                : $id,
         );
 
-        $result = $processor->process('any query', 'sylius_admin_order', 'sylius_admin_order_index', []);
+        $processor = $this->makeProcessor(
+            queryResolver: $resolver,
+            schemaBuilder: $schemaBuilder,
+            translator: $translator,
+        );
 
-        self::assertArrayHasKey('error', $result);
-        self::assertStringContainsString('AI processing failed', $result['error']);
-        self::assertStringContainsString('LLM down', $result['error']);
+        $this->expectException(GridQueryProcessorException::class);
+        $this->expectExceptionMessage('AI processing failed. Please try again.');
+
+        $processor->process('any query', 'sylius_admin_order', 'sylius_admin_order_index', []);
+    }
+
+    public function testThrowsTranslatedExceptionWhenGridDoesNotExist(): void
+    {
+        $schemaBuilder = $this->createMock(GridSchemaBuilderInterface::class);
+        $schemaBuilder->method('gridExists')->willReturn(false);
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturnCallback(
+            static fn (string $id, array $params = []) => 'guiziweb.grid_assistant.grid_not_found' === $id
+                ? sprintf('Grid "%s" not found.', $params['%grid_code%'] ?? '')
+                : $id,
+        );
+
+        $processor = $this->makeProcessor(schemaBuilder: $schemaBuilder, translator: $translator);
+
+        $this->expectException(GridQueryProcessorException::class);
+        $this->expectExceptionMessage('Grid "unknown_grid" not found.');
+
+        $processor->process('any query', 'unknown_grid', 'sylius_admin_order_index', []);
     }
 
     private function makeProcessor(
-        ?PlatformInterface $platform = null,
+        ?GridQueryResolverInterface $queryResolver = null,
+        ?GridCriteriaValidatorInterface $criteriaValidator = null,
+        ?GridSortingValidatorInterface $sortingValidator = null,
         ?GridSchemaBuilderInterface $schemaBuilder = null,
-        ?GridToolSchemaFactoryInterface $schemaFactory = null,
         ?RateLimiterFactoryInterface $rateLimiterFactory = null,
         ?Security $security = null,
         ?TranslatorInterface $translator = null,
@@ -126,17 +139,15 @@ final class GridQueryProcessorTest extends TestCase
         }
 
         return new GridQueryProcessor(
-            $platform ?? $this->createMock(PlatformInterface::class),
-            'gpt-4o',
+            $queryResolver ?? $this->createMock(GridQueryResolverInterface::class),
+            $criteriaValidator ?? $this->createMock(GridCriteriaValidatorInterface::class),
+            $sortingValidator ?? $this->createMock(GridSortingValidatorInterface::class),
             $schemaBuilder ?? $this->createMock(GridSchemaBuilderInterface::class),
-            $schemaFactory ?? $this->createMock(GridToolSchemaFactoryInterface::class),
-            $this->createMock(FilterValueFormatterRegistryInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(LoggerInterface::class),
             $rateLimiterFactory,
             $security,
             $translator ?? $this->createMock(TranslatorInterface::class),
-            $this->createMock(ClockInterface::class),
             $this->createMock(GridProviderInterface::class),
         );
     }

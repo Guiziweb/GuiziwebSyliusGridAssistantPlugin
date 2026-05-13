@@ -12,7 +12,7 @@ services:
     Symfony\UX\Autocomplete\AutocompleterRegistry:
         alias: 'ux.autocomplete.autocompleter_registry'
 
-    Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessor:
+    Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolver:
         arguments:
             $model: '%guiziweb.grid_assistant.model%'
 
