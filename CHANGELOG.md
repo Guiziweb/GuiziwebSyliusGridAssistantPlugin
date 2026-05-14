@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.3.0](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/compare/v0.2.0...v0.3.0) (2026-05-14)
+
+
+### Features
+
+* **grid-assistant:** add opt-in grid and opt-out filter/field configuration ([57701ac](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/57701ac8d058db5daadab525f85a48b17309754f))
+* **grid-assistant:** add opt-in grid and opt-out filter/field options ([4f05f40](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/4f05f4061a8b02264fd8fb2989d4fbf93727a80d))
+* **resolver:** tolerate missing AI platform at install time with clear runtime error ([a2d1cf1](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/a2d1cf1422a1fa214b5318750e065cf7efce3caa))
+* **resolver:** tolerate missing AI platform at install time with clear runtime error ([0aa505a](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/0aa505a9f0356acf665240454f38945936bb0d16))
+* **schema:** add filter value formatter layer ([b2767c9](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/b2767c9c63861bf10a5b700c144976da7eae5cb5))
+
+
+### Bug Fixes
+
+* **behat:** freeze clock and use absolute dates for stable LLM fixtures ([87158b2](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/87158b2983c21606f5518de193026e59568cc45c))
+* **behat:** freeze clock and use absolute dates for stable LLM fixtures ([7b0fbdc](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/7b0fbdccac72b4aeff9d5dbe2cf05c2e2e550000))
+* **deps:** pin api-platform/symfony ^4.3 to fix sylius/typeinfo issue 18878 ([a2804cd](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/a2804cd739a409a1a3de5911c431764f2daa3b95))
+* **deps:** pin symfony/ai-* to dev-main to fix symfony/ai issue 2018 ([c912ed1](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/c912ed158de3943affbdf14893aabc084bc923d8))
+* **deps:** pin symfony/ai-* to dev-main to fix symfony/ai issue 2018 ([0c2d868](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/0c2d868446e7db503696848402098c7e3e5c859b))
+* **deps:** pin symfony/type-info &lt;7.4 to fix sylius issue 18878 ([6651c38](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/6651c38a4e928f555dce6e357cac27d42b19a764))
+* **phpstan:** resolve all static analysis errors to level max ([2360fa5](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/2360fa5c7fb317563cb95a2768f1cd4b7d5c5488))
+
 ## [0.2.0](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/compare/v0.1.0...v0.2.0) (2026-04-06)
 
 
