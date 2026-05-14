@@ -21,7 +21,6 @@
         "symfony/ai-platform": "^0.8",
         "symfony/framework-bundle": "^7.3",
         "symfony/rate-limiter": "^7.3",
-        "twig/markdown-extra": "^3.24",
         "symfony/property-info": "^6.4 || ~7.3.0",
         "symfony/type-info": "~7.3.0"
     },
