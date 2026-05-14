@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Processor;
 
+use Guiziweb\SyliusGridAssistantPlugin\RateLimiter\RateLimitKeyResolverInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryConfigurationException;
 use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverException;
 use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverInterface;
@@ -12,7 +13,6 @@ use Guiziweb\SyliusGridAssistantPlugin\Validator\GridCriteriaValidatorInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Validator\GridSortingValidatorInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Provider\GridProviderInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -28,7 +28,7 @@ final readonly class GridQueryProcessor implements GridQueryProcessorInterface
         private UrlGeneratorInterface $urlGenerator,
         private LoggerInterface $aiLogger,
         private RateLimiterFactoryInterface $aiQueryLimiter,
-        private Security $security,
+        private RateLimitKeyResolverInterface $rateLimitKeyResolver,
         private TranslatorInterface $translator,
         #[Autowire(service: 'sylius.grid.chain_provider')]
         private GridProviderInterface $gridProvider,
@@ -37,12 +37,7 @@ final readonly class GridQueryProcessor implements GridQueryProcessorInterface
 
     public function process(string $query, string $gridCode, string $routeName, array $routeParams): string
     {
-        $user = $this->security->getUser();
-        if (null === $user) {
-            throw new GridQueryProcessorException($this->translator->trans('guiziweb.grid_assistant.rate_limit_unauthenticated'));
-        }
-
-        $limit = $this->aiQueryLimiter->create($user->getUserIdentifier())->consume();
+        $limit = $this->aiQueryLimiter->create($this->rateLimitKeyResolver->resolve())->consume();
         if (!$limit->isAccepted()) {
             $retryAfter = $limit->getRetryAfter()->getTimestamp() - time();
 

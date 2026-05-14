@@ -6,6 +6,7 @@ namespace Guiziweb\SyliusGridAssistantPlugin\Tests\Unit\Processor;
 
 use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessor;
 use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessorException;
+use Guiziweb\SyliusGridAssistantPlugin\RateLimiter\RateLimitKeyResolverInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverException;
 use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\GridSchemaBuilderInterface;
@@ -14,25 +15,21 @@ use Guiziweb\SyliusGridAssistantPlugin\Validator\GridSortingValidatorInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Provider\GridProviderInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimit;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class GridQueryProcessorTest extends TestCase
 {
-    public function testThrowsWhenUserIsNotAuthenticated(): void
+    public function testThrowsWhenKeyResolverRejectsTheCaller(): void
     {
-        $security = $this->createMock(Security::class);
-        $security->method('getUser')->willReturn(null);
+        $keyResolver = $this->createMock(RateLimitKeyResolverInterface::class);
+        $keyResolver->method('resolve')
+            ->willThrowException(new GridQueryProcessorException('rate_limit_unauthenticated'));
 
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator->method('trans')->willReturn('rate_limit_unauthenticated');
-
-        $processor = $this->makeProcessor(security: $security, translator: $translator);
+        $processor = $this->makeProcessor(keyResolver: $keyResolver);
 
         $this->expectException(GridQueryProcessorException::class);
         $this->expectExceptionMessage('rate_limit_unauthenticated');
@@ -118,15 +115,12 @@ final class GridQueryProcessorTest extends TestCase
         ?GridSortingValidatorInterface $sortingValidator = null,
         ?GridSchemaBuilderInterface $schemaBuilder = null,
         ?RateLimiterFactoryInterface $rateLimiterFactory = null,
-        ?Security $security = null,
+        ?RateLimitKeyResolverInterface $keyResolver = null,
         ?TranslatorInterface $translator = null,
     ): GridQueryProcessor {
-        if (null === $security) {
-            $user = $this->createMock(UserInterface::class);
-            $user->method('getUserIdentifier')->willReturn('admin@example.com');
-
-            $security = $this->createMock(Security::class);
-            $security->method('getUser')->willReturn($user);
+        if (null === $keyResolver) {
+            $keyResolver = $this->createMock(RateLimitKeyResolverInterface::class);
+            $keyResolver->method('resolve')->willReturn('admin@example.com');
         }
 
         if (null === $rateLimiterFactory) {
@@ -146,7 +140,7 @@ final class GridQueryProcessorTest extends TestCase
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(LoggerInterface::class),
             $rateLimiterFactory,
-            $security,
+            $keyResolver,
             $translator ?? $this->createMock(TranslatorInterface::class),
             $this->createMock(GridProviderInterface::class),
         );
