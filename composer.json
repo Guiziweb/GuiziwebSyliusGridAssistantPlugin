@@ -13,6 +13,13 @@
         "natural-language"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Guiziweb",
+            "email": "guiziweb@gmail.com",
+            "homepage": "https://github.com/Guiziweb"
+        }
+    ],
     "require": {
         "php": "^8.2",
         "api-platform/symfony": "^4.3",
