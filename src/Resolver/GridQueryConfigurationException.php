@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Resolver;
 
-class GridQueryResolverException extends \RuntimeException
+final class GridQueryConfigurationException extends GridQueryResolverException
 {
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Tests\Unit\Resolver;
 
+use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryConfigurationException;
 use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolver;
-use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverException;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\GridSchemaBuilderInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Toolbox\GridToolSchemaFactoryInterface;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ final class GridQueryResolverTest extends TestCase
             $this->createMock(ClockInterface::class),
         );
 
-        $this->expectException(GridQueryResolverException::class);
+        $this->expectException(GridQueryConfigurationException::class);
         $this->expectExceptionMessageMatches('/No AI platform configured/');
 
         $resolver->resolve('any query', 'sylius_admin_order');
