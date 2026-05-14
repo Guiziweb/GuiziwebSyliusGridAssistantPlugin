@@ -8,122 +8,56 @@
     </a>
 </p>
 
-<h1 align="center">Plugin Skeleton</h1>
+<h1 align="center">Sylius Grid Assistant Plugin</h1>
 
-<p align="center">Skeleton for starting Sylius plugins.</p>
+<p align="center">
+    <a href="https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/actions"><img src="https://img.shields.io/github/actions/workflow/status/Guiziweb/GuiziwebSyliusGridAssistantPlugin/build.yaml?branch=main" alt="Build status"></a>
+    <a href="https://packagist.org/packages/guiziweb/sylius-grid-assistant-plugin"><img src="https://img.shields.io/packagist/v/guiziweb/sylius-grid-assistant-plugin" alt="Latest version"></a>
+    <a href="https://packagist.org/packages/guiziweb/sylius-grid-assistant-plugin"><img src="https://img.shields.io/packagist/php-v/guiziweb/sylius-grid-assistant-plugin" alt="PHP version"></a>
+    <img src="https://img.shields.io/badge/phpunit-passing-success" alt="PHPUnit">
+    <img src="https://img.shields.io/badge/behat-passing-success" alt="Behat">
+    <img src="https://img.shields.io/badge/phpstan-level%20max-blue" alt="PHPStan max">
+    <img src="https://img.shields.io/badge/ecs-passing-success" alt="ECS">
+    <a href="https://packagist.org/packages/guiziweb/sylius-grid-assistant-plugin"><img src="https://img.shields.io/packagist/l/guiziweb/sylius-grid-assistant-plugin" alt="License"></a>
+</p>
+
+> **Natural language → filtered grid.** AI-powered filtering for Sylius admin grids.
+
+## How it works
+
+In an admin grid (orders, products, customers...), the assistant adds a search bar at the top. Type your query in plain language:
+
+> *"orders over $100 from john.doe@gmail.com last month"*
+
+The plugin sends the query to a Large Language Model (OpenAI, Gemini, Anthropic, Mistral...), gets back structured filters and sorting (JSON Schema strict), and redirects to the same grid with the filters applied - exactly as if you had clicked them manually.
+
+![Demo](docs/demo.gif)
+
+## Requirements
+
+- PHP ^8.2
+- Sylius ^2.0
+- An AI provider account (OpenAI, Gemini, Anthropic, Mistral...) and its API key
+
+## Quick install
+
+This plugin ships a [Symfony Flex recipe](https://github.com/Guiziweb/SyliusRecipes). With the Guiziweb recipe endpoint configured in your project (see linked repo), the install boils down to:
+
+```bash
+composer require guiziweb/sylius-grid-assistant-plugin
+composer require symfony/ai-bundle symfony/ai-open-ai-platform  # or another bridge
+```
+
+Then fill in your API key in `.env.local` and enable the grids you want. The Flex recipes (plugin + bridge) take care of the rest (bundle registration, config files, env var stub).
+
+Full step-by-step guide (with and without Flex): [installation](docs/installation.md).
 
 ## Documentation
 
-For a comprehensive guide on Sylius Plugins development please go to Sylius documentation,
-there you will find the <a href="https://docs.sylius.com/en/latest/plugin-development-guide/index.html">Plugin Development Guide</a>, that is full of examples.
+- [Installation](docs/installation.md) - full setup steps
+- [Usage](docs/usage.md) - admin guide with query examples
+- [Extending](docs/extending.md) - add custom filter types
 
-For more information about the **Test Application** included in the skeleton, please refer to the [Sylius documentation](https://docs.sylius.com/sylius-plugins/plugins-development-guide/testapplication).
+## License
 
-## Quickstart Installation
-
-Run `composer create-project sylius/plugin-skeleton ProjectName`.
-
-### Traditional
-
-1. From the plugin skeleton root directory, run the following commands:
-
-    ```bash
-    (cd vendor/sylius/test-application && yarn install)
-    (cd vendor/sylius/test-application && yarn build)
-    vendor/bin/console assets:install
-   
-    vendor/bin/console doctrine:database:create
-    vendor/bin/console doctrine:migrations:migrate -n
-    # Optionally load data fixtures
-    vendor/bin/console sylius:fixtures:load -n
-    ```
-
-To be able to set up a plugin's database, remember to configure your database credentials in `tests/TestApplication/.env` and `tests/TestApplication/.env.test`.
-
-2. Run your local server:
-
-      ```bash
-      symfony server:ca:install
-      symfony server:start -d
-      ```
-
-3. Open your browser and navigate to `https://localhost:8000`.
-
-### Docker
-
-1. Execute `make init` to initialize the container and install the dependencies.
-
-2. Execute `make database-init` to create the database and run migrations.
-
-3. (Optional) Execute `make load-fixtures` to load the fixtures.
-
-4. Your app is available at `http://localhost`.
-
-## Usage
-
-### Running plugin tests
-
-  - PHPUnit
-
-    ```bash
-    vendor/bin/phpunit
-    ```
-
-  - Behat (non-JS scenarios)
-
-    ```bash
-    vendor/bin/behat --strict --tags="~@javascript&&~@mink:chromedriver"
-    ```
-
-  - Behat (JS scenarios)
- 
-    1. [Install Symfony CLI command](https://symfony.com/download).
- 
-    2. Start Headless Chrome:
-    
-      ```bash
-      google-chrome-stable --enable-automation --disable-background-networking --no-default-browser-check --no-first-run --disable-popup-blocking --disable-default-apps --allow-insecure-localhost --disable-translate --disable-extensions --no-sandbox --enable-features=Metal --headless --remote-debugging-port=9222 --window-size=2880,1800 --proxy-server='direct://' --proxy-bypass-list='*' http://127.0.0.1
-      ```
-    
-    3. Install SSL certificates (only once needed) and run test application's webserver on `127.0.0.1:8080`:
-    
-      ```bash
-      symfony server:ca:install
-      APP_ENV=test symfony server:start --port=8080 --daemon
-      ```
-    
-    4. Run Behat:
-    
-      ```bash
-      vendor/bin/behat --strict --tags="@javascript,@mink:chromedriver"
-      ```
-    
-  - Static Analysis
-      
-    - PHPStan
-    
-      ```bash
-      vendor/bin/phpstan analyse -c phpstan.neon -l max src/  
-      ```
-
-  - Coding Standard
-  
-    ```bash
-    vendor/bin/ecs check
-    ```
-
-### Opening Sylius with your plugin
-
-- Using `test` environment:
-
-    ```bash
-    APP_ENV=test vendor/bin/console vendor/bin/console sylius:fixtures:load -n
-    APP_ENV=test symfony server:start -d
-    ```
-    
-- Using `dev` environment:
-
-    ```bash
-    vendor/bin/console vendor/bin/console sylius:fixtures:load -n
-    symfony server:start -d
-    ```
+MIT - see [LICENSE](LICENSE).
