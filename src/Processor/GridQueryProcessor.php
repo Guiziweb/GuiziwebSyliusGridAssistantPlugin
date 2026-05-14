@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Processor;
 
+use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryConfigurationException;
 use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverException;
 use Guiziweb\SyliusGridAssistantPlugin\Resolver\GridQueryResolverInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\GridSchemaBuilderInterface;
@@ -54,6 +55,10 @@ final readonly class GridQueryProcessor implements GridQueryProcessorInterface
 
         try {
             $resolved = $this->queryResolver->resolve($query, $gridCode);
+        } catch (GridQueryConfigurationException $e) {
+            $this->aiLogger->warning('[GridAssistant] Configuration error', ['error' => $e->getMessage()]);
+
+            throw new GridQueryProcessorException($e->getMessage(), 0, $e);
         } catch (GridQueryResolverException $e) {
             $this->aiLogger->warning('[GridAssistant] Resolver error', ['error' => $e->getMessage()]);
 

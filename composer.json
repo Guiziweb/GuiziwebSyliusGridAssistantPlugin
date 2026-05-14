@@ -18,7 +18,7 @@
         "api-platform/symfony": "^4.3",
         "league/commonmark": "^2.8",
         "sylius/sylius": "^2.0",
-        "symfony/ai-platform": "dev-main as 0.8.x-dev",
+        "symfony/ai-platform": "^0.8",
         "symfony/framework-bundle": "^7.3",
         "symfony/rate-limiter": "^7.3",
         "twig/markdown-extra": "^3.24",
@@ -39,8 +39,9 @@
         "friends-of-behat/symfony-extension": "^2.6",
         "friends-of-behat/variadic-extension": "^1.6",
         "nyholm/psr7": "^1.8",
-        "symfony/ai-bundle": "dev-main as 0.8.x-dev",
-        "symfony/ai-open-ai-platform": "dev-main as 0.8.x-dev",
+        "symfony/ai-agent": "^0.8",
+        "symfony/ai-bundle": "^0.8",
+        "symfony/ai-open-ai-platform": "^0.8",
         "phpstan/phpstan": "^1.12",
         "phpstan/phpstan-doctrine": "^1.3",
         "phpstan/phpstan-webmozart-assert": "^1.2",
@@ -60,6 +61,7 @@
         "symfony/webpack-encore-bundle": "^2.2"
     },
     "suggest": {
+        "symfony/ai-bundle": "Required to enable AI features (declares Platform services from ai.yaml config)",
         "symfony/ai-open-ai-platform": "To use OpenAI as AI provider",
         "symfony/ai-anthropic-platform": "To use Anthropic Claude as AI provider",
         "symfony/ai-mistral-platform": "To use Mistral as AI provider"
