@@ -18,6 +18,7 @@
                     value="{{ this.query }}"
                     autocomplete="off"
                     data-loading-disabled
+                    required
                 >
             </div>
 
@@ -35,7 +36,7 @@
 
         {% if this.error %}
             <div class="mt-2 text-danger">
-                {{ this.error|markdown_to_html }}
+                {{ this.error|nl2br }}
             </div>
         {% endif %}
 
