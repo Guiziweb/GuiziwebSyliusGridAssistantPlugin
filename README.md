@@ -36,7 +36,7 @@ The plugin sends the query to a Large Language Model (OpenAI, Gemini, Anthropic,
 ## Requirements
 
 - PHP ^8.2
-- Sylius ^2.0
+- Sylius ^2.1
 - An AI provider account (OpenAI, Gemini, Anthropic, Mistral...) and its API key
 
 ## Quick install
