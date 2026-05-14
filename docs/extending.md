@@ -122,6 +122,42 @@ public static function getType(): array
 
 The same builder/formatter will be used for both types.
 
+## Custom rate-limit key
+
+By default, the plugin rate-limits AI queries per authenticated admin user (the `UserIdentifierKeyResolver`, which throws when no user is logged in). To use a different key (IP, tenant, anything else), implement `RateLimitKeyResolverInterface` and alias it in your `services.yaml`.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\GridAssistant;
+
+use Guiziweb\SyliusGridAssistantPlugin\RateLimiter\RateLimitKeyResolverInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+final readonly class IpKeyResolver implements RateLimitKeyResolverInterface
+{
+    public function __construct(private RequestStack $requestStack)
+    {
+    }
+
+    public function resolve(): string
+    {
+        return $this->requestStack->getCurrentRequest()?->getClientIp() ?? 'anonymous';
+    }
+}
+```
+
+```yaml
+# config/services.yaml
+services:
+    Guiziweb\SyliusGridAssistantPlugin\RateLimiter\RateLimitKeyResolverInterface:
+        alias: App\GridAssistant\IpKeyResolver
+```
+
+The resolver may throw `Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessorException` to reject the request before any AI call is made (that's how the default resolver handles anonymous users).
+
 ## Overriding a built-in type
 
 Overriding a native builder/formatter for one of the stock types is technically possible (the registry stores them by type, so any same-type registration replaces the previous one), **but the registration order isn't guaranteed** by Symfony's autoconfiguration. If you really need to override, the safest path is to disable the plugin's built-in service in your `services.yaml` (turning off autoconfigure removes the tag that would register it as a builder) and replace it explicitly:

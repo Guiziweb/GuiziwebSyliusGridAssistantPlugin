@@ -17,6 +17,9 @@ services:
             $platform: '@?Symfony\AI\Platform\PlatformInterface'
             $model: '%guiziweb.grid_assistant.model%'
 
+    Guiziweb\SyliusGridAssistantPlugin\RateLimiter\RateLimitKeyResolverInterface:
+        alias: Guiziweb\SyliusGridAssistantPlugin\RateLimiter\UserIdentifierKeyResolver
+
     Guiziweb\SyliusGridAssistantPlugin\Twig\Extension\GridAssistantExtension:
         arguments:
             $enabledGrids: '%guiziweb.grid_assistant.enabled_grids%'
