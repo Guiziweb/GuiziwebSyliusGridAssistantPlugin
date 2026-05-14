@@ -37,6 +37,34 @@ final class GridQueryProcessorTest extends TestCase
         $processor->process('any query', 'sylius_admin_order', 'sylius_admin_order_index', []);
     }
 
+    public function testKeyReturnedByResolverIsUsedAsRateLimiterBucket(): void
+    {
+        $keyResolver = $this->createMock(RateLimitKeyResolverInterface::class);
+        $keyResolver->method('resolve')->willReturn('192.0.2.42');
+
+        $rateLimit = new RateLimit(10, new \DateTimeImmutable('+1 minute'), true, 10);
+        $limiter = $this->createMock(LimiterInterface::class);
+        $limiter->method('consume')->willReturn($rateLimit);
+
+        $factory = $this->createMock(RateLimiterFactoryInterface::class);
+        $factory->expects(self::once())
+            ->method('create')
+            ->with('192.0.2.42')
+            ->willReturn($limiter);
+
+        $schemaBuilder = $this->createMock(GridSchemaBuilderInterface::class);
+        $schemaBuilder->method('gridExists')->willReturn(false);
+
+        $processor = $this->makeProcessor(
+            schemaBuilder: $schemaBuilder,
+            rateLimiterFactory: $factory,
+            keyResolver: $keyResolver,
+        );
+
+        $this->expectException(GridQueryProcessorException::class);
+        $processor->process('any query', 'unknown_grid', 'sylius_admin_order_index', []);
+    }
+
     public function testThrowsWhenRateLimitIsExceeded(): void
     {
         $rateLimit = new RateLimit(0, new \DateTimeImmutable('+42 seconds'), false, 10);
