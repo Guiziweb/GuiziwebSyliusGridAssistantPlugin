@@ -58,8 +58,6 @@ composer require symfony/ai-bundle symfony/ai-anthropic-platform
 composer require symfony/ai-bundle symfony/ai-mistral-platform
 ```
 
-See [Providers](providers.md) for comparison and cost notes.
-
 ## 4. Configure the AI platform
 
 If you have Flex enabled (the endpoint added at step 1, or any Flex-enabled project), **this step is automatic**. The bridge's recipe creates the config for you:

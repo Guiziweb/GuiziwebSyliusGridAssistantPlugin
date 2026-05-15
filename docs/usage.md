@@ -33,7 +33,7 @@ new orders only
 
 ## What's supported
 
-- **Filter types**: `boolean`, `date`, `entity`, `enum`, `exists`, `money`, `numeric_range`, `select`, `string`, `ux_autocomplete`, `ux_translatable_autocomplete` (10 Sylius native types covered by 8 built-in schema builders)
+- **Filter types**: `boolean`, `date`, `entity`, `enum`, `exists`, `money`, `numeric_range`, `resource_autocomplete`, `select`, `string`, `ux_autocomplete`, `ux_translatable_autocomplete` (12 Sylius native types covered by 8 built-in schema builders)
 - **Sorting**: any field marked `sortable:` in your Sylius grid definition
 - **Languages**: the system prompt is in English but the LLM understands queries in most languages (quality varies)
 
