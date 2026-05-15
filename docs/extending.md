@@ -1,6 +1,6 @@
 # Extending
 
-The plugin's 8 built-in schema builders cover 10 native Sylius filter types out of the box: `boolean`, `date`, `entity`, `enum`, `exists`, `money`, `numeric_range`, `select`, `string`, `ux_autocomplete`, `ux_translatable_autocomplete`. If your project defines **a custom filter type** outside that list, you need to teach the assistant about it.
+The plugin's 8 built-in schema builders cover 12 native Sylius filter types out of the box: `boolean`, `date`, `entity`, `enum`, `exists`, `money`, `numeric_range`, `resource_autocomplete`, `select`, `string`, `ux_autocomplete`, `ux_translatable_autocomplete`. If your project defines **a custom filter type** outside that list, you need to teach the assistant about it.
 
 ## When you need to extend
 
@@ -8,13 +8,11 @@ Only when you have a **custom Sylius filter type**. If you're using stock Sylius
 
 ## Scope: this plugin vs Sylius
 
-This guide covers **the plugin's side** - the SchemaBuilder/ValueFormatter pair that teaches the AI about your filter. Registering the filter type with Sylius itself is **not** part of this plugin and must be done separately:
+This guide covers **the plugin's side** - the SchemaBuilder/ValueFormatter pair that teaches the AI about your filter. Registering the filter type with Sylius itself is **not** part of this plugin and must be done separately.
 
-1. A PHP class implementing `Sylius\Component\Grid\Filtering\FilterInterface`
-2. A service tagged `sylius.grid_filter` with both `type` and `form_type` attributes
-3. A template registered in `sylius_grid.templates.filter` (otherwise Sylius admin sidebar throws "Missing template for filter type X")
+The recommended way is the `#[AsFilter]` attribute on a class implementing `FilterInterface`, which auto-registers the service, declares the form type and the template in one place. See the [Sylius grid filters documentation](https://stack.sylius.com/grid/index/filters) for the full reference.
 
-See the [Sylius Grid Bundle documentation](https://docs.sylius.com/en/latest/book/grids/grids.html) for these steps. Once your filter is wired with Sylius, the rest of this guide tells you how to teach the AI about it.
+Once your filter is wired with Sylius, the rest of this guide tells you how to teach the AI about it.
 
 ## Two interfaces to implement
 
