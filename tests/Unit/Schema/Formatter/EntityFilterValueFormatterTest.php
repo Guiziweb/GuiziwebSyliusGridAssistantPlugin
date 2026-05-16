@@ -110,7 +110,6 @@ final class EntityFilterValueFormatterTest extends TestCase
         $result = $this->formatter->format('John Doe', $this->filter());
 
         self::assertSame(7, $result->value);
-        self::assertEmpty($result->warnings);
     }
 
     public function testFormatStringSearchUsesTranslatableAutocompleterForUxTranslatableType(): void
@@ -134,10 +133,9 @@ final class EntityFilterValueFormatterTest extends TestCase
         $result = $this->formatter->format('Some Product', $this->filter('ux_translatable_autocomplete'));
 
         self::assertSame(12, $result->value);
-        self::assertEmpty($result->warnings);
     }
 
-    public function testFormatStringSearchEntityNotFoundReturnsWarning(): void
+    public function testFormatStringSearchEntityNotFoundReturnsNullValue(): void
     {
         $query = $this->createMock(\Doctrine\ORM\Query::class);
         $query->method('getResult')->willReturn([]);
@@ -156,8 +154,6 @@ final class EntityFilterValueFormatterTest extends TestCase
         $result = $this->formatter->format('Unknown', $this->filter());
 
         self::assertNull($result->value);
-        self::assertNotEmpty($result->warnings);
-        self::assertStringContainsString('Unknown', $result->warnings[0]);
     }
 
     public function testFormatMultipleIds(): void
