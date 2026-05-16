@@ -34,11 +34,13 @@ final readonly class GridCriteriaValidator implements GridCriteriaValidatorInter
             $filter = $grid->getFilter($filterName);
             $filterType = $filter->getType();
 
-            if ($this->formatterRegistry->has($filterType)) {
-                $formatted = $this->formatterRegistry->get($filterType)->format($value, $filter)->value;
-            } else {
-                $formatted = $value;
+            if (!$this->formatterRegistry->has($filterType)) {
+                $this->aiLogger->warning('[GridAssistant] No formatter registered for filter type, skipping', ['filter' => $filterName, 'type' => $filterType]);
+
+                continue;
             }
+
+            $formatted = $this->formatterRegistry->get($filterType)->format($value, $filter)->value;
 
             if (null !== $formatted) {
                 $valid[$filterName] = $formatted;

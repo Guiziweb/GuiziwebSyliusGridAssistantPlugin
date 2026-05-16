@@ -30,6 +30,18 @@ final class GridSchemaBuilderTest extends TestCase
         self::assertArrayNotHasKey('internal_notes', $schema['filters']);
     }
 
+    public function testFiltersWithoutRegisteredSchemaBuilderAreExcluded(): void
+    {
+        $grid = $this->makeGrid();
+        $grid->addFilter($this->makeFilter('date', 'date'));
+        $grid->addFilter($this->makeFilter('legacy', 'custom_unknown'));
+
+        $schema = $this->makeBuilder($grid)->buildSchema('any');
+
+        self::assertArrayHasKey('date', $schema['filters']);
+        self::assertArrayNotHasKey('legacy', $schema['filters']);
+    }
+
     public function testSortableFieldsWithAiSearchableFalseAreExcluded(): void
     {
         $grid = $this->makeGrid();
