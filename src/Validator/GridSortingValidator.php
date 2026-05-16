@@ -41,7 +41,9 @@ final readonly class GridSortingValidator implements GridSortingValidatorInterfa
 
             $normalized = strtolower(trim($direction));
             if (!in_array($normalized, ['asc', 'desc'], true)) {
-                $normalized = 'asc';
+                $this->aiLogger->warning('[GridAssistant] Invalid sort direction skipped', ['field' => $field, 'direction' => $direction]);
+
+                continue;
             }
 
             $valid[$field] = $normalized;
