@@ -20,6 +20,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final readonly class GridQueryProcessor implements GridQueryProcessorInterface
 {
+    /**
+     * @param list<string> $enabledGrids
+     */
     public function __construct(
         private GridQueryResolverInterface $queryResolver,
         private GridCriteriaValidatorInterface $criteriaValidator,
@@ -32,11 +35,16 @@ final readonly class GridQueryProcessor implements GridQueryProcessorInterface
         private TranslatorInterface $translator,
         #[Autowire(service: 'sylius.grid.chain_provider')]
         private GridProviderInterface $gridProvider,
+        private array $enabledGrids = [],
     ) {
     }
 
     public function process(string $query, string $gridCode, string $routeName, array $routeParams): string
     {
+        if (!in_array($gridCode, $this->enabledGrids, true)) {
+            throw new GridQueryProcessorException($this->translator->trans('guiziweb.grid_assistant.grid_not_enabled', ['%grid_code%' => $gridCode]));
+        }
+
         $limit = $this->aiQueryLimiter->create($this->rateLimitKeyResolver->resolve())->consume();
         if (!$limit->isAccepted()) {
             $retryAfter = $limit->getRetryAfter()->getTimestamp() - time();
