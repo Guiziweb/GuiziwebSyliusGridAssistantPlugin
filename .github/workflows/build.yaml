@@ -153,6 +153,10 @@ jobs:
                 run: composer validate --ansi
 
             -
+                name: Audit dependencies
+                run: composer audit --ansi --abandoned=report
+
+            -
                 name: Validate container
                 run: vendor/bin/console lint:container
 
