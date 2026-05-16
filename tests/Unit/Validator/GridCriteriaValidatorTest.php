@@ -40,14 +40,19 @@ final class GridCriteriaValidatorTest extends TestCase
         self::assertSame([], $validator->validate(['unknown' => 'value'], $grid));
     }
 
-    public function testPassesValueThroughWhenNoFormatterRegistered(): void
+    public function testSkipsValueWhenNoFormatterRegisteredAndLogsWarning(): void
     {
         $grid = $this->makeGrid();
-        $grid->addFilter(Filter::fromNameAndType('state', 'select'));
+        $grid->addFilter(Filter::fromNameAndType('state', 'custom_unknown'));
 
-        $validator = new GridCriteriaValidator($this->emptyRegistry(), $this->createMock(LoggerInterface::class));
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())
+            ->method('warning')
+            ->with('[GridAssistant] No formatter registered for filter type, skipping', ['filter' => 'state', 'type' => 'custom_unknown']);
 
-        self::assertSame(['state' => 'new'], $validator->validate(['state' => 'new'], $grid));
+        $validator = new GridCriteriaValidator($this->emptyRegistry(), $logger);
+
+        self::assertSame([], $validator->validate(['state' => 'attacker-controlled'], $grid));
     }
 
     public function testAppliesFormatterWhenRegistered(): void

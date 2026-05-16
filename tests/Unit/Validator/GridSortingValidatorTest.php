@@ -104,6 +104,24 @@ final class GridSortingValidatorTest extends TestCase
         );
     }
 
+    public function testIgnoresDisabledField(): void
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())
+            ->method('warning')
+            ->with('[GridAssistant] Unknown sortable field skipped', ['field' => 'total']);
+
+        $grid = Grid::fromCodeAndDriverConfiguration('test_grid', 'doctrine/orm', []);
+        $field = Field::fromNameAndType('total', 'string');
+        $field->setSortable('total');
+        $field->setEnabled(false);
+        $grid->addField($field);
+
+        $validator = new GridSortingValidator($logger);
+
+        self::assertSame([], $validator->validate(['total' => 'asc'], $grid));
+    }
+
     private function gridWithSortableField(string $name): Grid
     {
         $grid = Grid::fromCodeAndDriverConfiguration('test_grid', 'doctrine/orm', []);
