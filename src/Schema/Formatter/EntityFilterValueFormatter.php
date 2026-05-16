@@ -37,7 +37,6 @@ final class EntityFilterValueFormatter implements FilterValueFormatterInterface
 
         if (is_array($value)) {
             $ids = [];
-            $warnings = [];
             foreach ($value as $v) {
                 $resolved = $this->resolveEntityId($v, $filter);
                 if (null !== $resolved->value) {
@@ -47,22 +46,21 @@ final class EntityFilterValueFormatter implements FilterValueFormatterInterface
                         $ids[] = $resolved->value;
                     }
                 }
-                array_push($warnings, ...$resolved->warnings);
             }
 
-            return new FilterFormatResult(!empty($ids) ? $ids : null, $warnings);
+            return new FilterFormatResult(!empty($ids) ? $ids : null);
         }
 
         $resolved = $this->resolveEntityId($value, $filter);
         if (null === $resolved->value) {
-            return new FilterFormatResult(null, $resolved->warnings);
+            return new FilterFormatResult(null);
         }
 
         if ($isMultiple) {
-            return new FilterFormatResult(is_array($resolved->value) ? $resolved->value : [$resolved->value], $resolved->warnings);
+            return new FilterFormatResult(is_array($resolved->value) ? $resolved->value : [$resolved->value]);
         }
 
-        return new FilterFormatResult($resolved->value, $resolved->warnings);
+        return new FilterFormatResult($resolved->value);
     }
 
     private function resolveEntityId(mixed $value, Filter $filter): FilterFormatResult
@@ -154,7 +152,7 @@ final class EntityFilterValueFormatter implements FilterValueFormatterInterface
             'filterType' => $filterType,
         ]);
 
-        return new FilterFormatResult(null, [sprintf('"%s" not found', $value)]);
+        return new FilterFormatResult(null);
     }
 
     private function getAutocompleterAlias(string $filterType): string
