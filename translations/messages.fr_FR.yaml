@@ -7,6 +7,7 @@ guiziweb:
         rate_limit_exceeded: "Trop de requêtes. Réessayez dans %seconds% secondes."
         rate_limit_unauthenticated: "Authentification requise."
         grid_not_found: 'Grille "%grid_code%" introuvable.'
+        grid_not_enabled: 'L''assistant IA n''est pas activé pour la grille "%grid_code%".'
         ai_processing_failed: "Le traitement IA a échoué. Veuillez réessayer."
         no_filter_determined: "Aucun filtre n'a pu être déterminé à partir de votre requête. Veuillez reformuler."
         url_generation_failed: "Impossible de générer l'URL de redirection."

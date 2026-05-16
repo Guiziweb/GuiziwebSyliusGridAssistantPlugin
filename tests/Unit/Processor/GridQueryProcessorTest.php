@@ -137,6 +137,29 @@ final class GridQueryProcessorTest extends TestCase
         $processor->process('any query', 'unknown_grid', 'sylius_admin_order_index', []);
     }
 
+    public function testThrowsWhenGridIsNotEnabled(): void
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturnCallback(
+            static fn (string $id, array $params = []) => 'guiziweb.grid_assistant.grid_not_enabled' === $id
+                ? sprintf('AI assistant is not enabled for grid "%s".', $params['%grid_code%'] ?? '')
+                : $id,
+        );
+
+        $processor = $this->makeProcessor(
+            translator: $translator,
+            enabledGrids: ['sylius_admin_order'],
+        );
+
+        $this->expectException(GridQueryProcessorException::class);
+        $this->expectExceptionMessage('AI assistant is not enabled for grid "sylius_admin_product".');
+
+        $processor->process('any query', 'sylius_admin_product', 'sylius_admin_product_index', []);
+    }
+
+    /**
+     * @param list<string>|null $enabledGrids
+     */
     private function makeProcessor(
         ?GridQueryResolverInterface $queryResolver = null,
         ?GridCriteriaValidatorInterface $criteriaValidator = null,
@@ -145,6 +168,7 @@ final class GridQueryProcessorTest extends TestCase
         ?RateLimiterFactoryInterface $rateLimiterFactory = null,
         ?RateLimitKeyResolverInterface $keyResolver = null,
         ?TranslatorInterface $translator = null,
+        ?array $enabledGrids = null,
     ): GridQueryProcessor {
         if (null === $keyResolver) {
             $keyResolver = $this->createMock(RateLimitKeyResolverInterface::class);
@@ -171,6 +195,7 @@ final class GridQueryProcessorTest extends TestCase
             $keyResolver,
             $translator ?? $this->createMock(TranslatorInterface::class),
             $this->createMock(GridProviderInterface::class),
+            $enabledGrids ?? ['sylius_admin_order', 'unknown_grid'],
         );
     }
 }

@@ -7,6 +7,7 @@ guiziweb:
         rate_limit_exceeded: "Too many requests. Try again in %seconds% seconds."
         rate_limit_unauthenticated: "Authentication required."
         grid_not_found: 'Grid "%grid_code%" not found.'
+        grid_not_enabled: 'AI assistant is not enabled for grid "%grid_code%".'
         ai_processing_failed: "AI processing failed. Please try again."
         no_filter_determined: "Could not determine any filter from your query. Please try rephrasing."
         url_generation_failed: "Failed to generate the redirect URL."
