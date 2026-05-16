@@ -157,6 +157,14 @@ jobs:
                 run: vendor/bin/console lint:container
 
             -
+                name: Run PHPStan
+                run: vendor/bin/phpstan analyse -c phpstan.neon
+
+            -
+                name: Run ECS
+                run: vendor/bin/ecs check src
+
+            -
                 name: Run Non-unit PHPUnit tests
                 run: vendor/bin/phpunit --colors=always --testsuite=non-unit
 
