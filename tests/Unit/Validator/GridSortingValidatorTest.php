@@ -89,14 +89,17 @@ final class GridSortingValidatorTest extends TestCase
         self::assertSame([], $validator->validate(['total' => 'asc'], $grid));
     }
 
-    public function testInvalidDirectionIsCoercedToAsc(): void
+    public function testInvalidDirectionIsSkippedAndLogged(): void
     {
-        $validator = new GridSortingValidator($this->createMock(LoggerInterface::class));
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects(self::once())
+            ->method('warning')
+            ->with('[GridAssistant] Invalid sort direction skipped', ['field' => 'total', 'direction' => 'sideways']);
 
-        // Current behavior: invalid direction silently becomes 'asc'.
-        // Tracked for review (see PR fix/sorting-validator-strict-direction which switches to skip).
+        $validator = new GridSortingValidator($logger);
+
         self::assertSame(
-            ['total' => 'asc'],
+            [],
             $validator->validate(['total' => 'sideways'], $this->gridWithSortableField('total')),
         );
     }
