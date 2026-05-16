@@ -2,6 +2,7 @@ guiziweb:
     grid_assistant:
         placeholder: "Décrivez ce que vous recherchez..."
         query_not_blank: "Veuillez entrer une requête de recherche."
+        query_too_long: "La requête est trop longue. Veuillez la limiter à {{ limit }} caractères."
         search_button: "Rechercher"
         searching: "Recherche en cours..."
         rate_limit_exceeded: "Trop de requêtes. Réessayez dans %seconds% secondes."

@@ -8,6 +8,8 @@ use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessorException;
 use Guiziweb\SyliusGridAssistantPlugin\Processor\GridQueryProcessorInterface;
 use Sylius\TwigHooks\LiveComponent\HookableLiveComponentTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -21,6 +23,8 @@ final class GridAssistantComponent
     use HookableLiveComponentTrait;
 
     #[LiveProp(writable: true)]
+    #[Assert\NotBlank(message: 'guiziweb.grid_assistant.query_not_blank')]
+    #[Assert\Length(max: 500, maxMessage: 'guiziweb.grid_assistant.query_too_long')]
     public string $query = '';
 
     #[LiveProp]
@@ -38,6 +42,7 @@ final class GridAssistantComponent
     public function __construct(
         private readonly GridQueryProcessorInterface $queryProcessor,
         private readonly TranslatorInterface $translator,
+        private readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -46,8 +51,10 @@ final class GridAssistantComponent
     {
         $this->error = null;
 
-        if (empty(trim($this->query))) {
-            $this->error = $this->translator->trans('guiziweb.grid_assistant.query_not_blank');
+        $violations = $this->validator->validate($this);
+        if (0 !== $violations->count()) {
+            $violation = $violations->get(0);
+            $this->error = $this->translator->trans((string) $violation->getMessage(), $violation->getParameters());
 
             return null;
         }
