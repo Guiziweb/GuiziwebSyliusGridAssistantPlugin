@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Schema;
 
-use Guiziweb\SyliusGridAssistantPlugin\Schema\Builder\FilterSchemaBuilderRegistry;
+use Guiziweb\SyliusGridAssistantPlugin\Schema\Builder\FilterSchemaBuilderRegistryInterface;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\Builder\TranslateLabelTrait;
 use Sylius\Component\Grid\Definition\Filter;
 use Sylius\Component\Grid\Definition\Grid;
@@ -23,7 +23,7 @@ final readonly class GridSchemaBuilder implements GridSchemaBuilderInterface
     public function __construct(
         #[Autowire(service: 'sylius.grid.chain_provider')]
         private GridProviderInterface $gridProvider,
-        private FilterSchemaBuilderRegistry $filterSchemaBuilderRegistry,
+        private FilterSchemaBuilderRegistryInterface $filterSchemaBuilderRegistry,
         private TranslatorInterface $translator,
     ) {
     }

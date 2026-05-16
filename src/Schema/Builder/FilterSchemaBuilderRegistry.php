@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Schema\Builder;
 
-final class FilterSchemaBuilderRegistry
+final class FilterSchemaBuilderRegistry implements FilterSchemaBuilderRegistryInterface
 {
     /** @var array<string, FilterSchemaBuilderInterface> */
     private array $builders = [];

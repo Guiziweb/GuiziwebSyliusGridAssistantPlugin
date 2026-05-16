@@ -17,7 +17,7 @@ final readonly class GridSortingValidator implements GridSortingValidatorInterfa
     public function validate(array $rawSorting, Grid $grid): array
     {
         $sortableFields = [];
-        foreach ($grid->getFields() as $field) {
+        foreach ($grid->getEnabledFields() as $field) {
             if ($field->isSortable()) {
                 $sortableFields[] = $field->getName();
             }
