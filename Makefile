@@ -69,5 +69,11 @@ phpunit-unit:
 behat:
 	@ENV=$(ENV) DOCKER_USER=root $(DOCKER_COMPOSE) run --rm php vendor/bin/behat
 
+test:
+	@make -s ecs
+	@make -s phpstan
+	@make -s phpunit
+	@make -s behat
+
 rename:
 	@php bin/rename-plugin.php
