@@ -1,0 +1,10 @@
+name: Claude Dispatch
+
+on:
+    issue_comment:
+        types: [created]
+
+jobs:
+    dispatch:
+        uses: Guiziweb/.github/.github/workflows/claude-dispatch.yml@feat/claude-dispatch
+        secrets: inherit
