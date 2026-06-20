@@ -69,6 +69,7 @@ phpunit-unit:
 behat:
 	@ENV=$(ENV) DOCKER_USER=root $(DOCKER_COMPOSE) run --rm php vendor/bin/behat
 
+## Run the full quality suite: ecs, phpstan, phpunit, behat
 test:
 	@make -s ecs
 	@make -s phpstan
