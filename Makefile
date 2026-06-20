@@ -1,4 +1,4 @@
-.PHONY: run
+.PHONY: run check
 
 DOCKER_COMPOSE ?= docker compose
 DOCKER_USER ?= "$(shell id -u):$(shell id -g)"
@@ -68,6 +68,13 @@ phpunit-unit:
 
 behat:
 	@ENV=$(ENV) DOCKER_USER=root $(DOCKER_COMPOSE) run --rm php vendor/bin/behat
+
+# QA
+check:
+	@make -s ecs
+	@make -s phpstan
+	@make -s phpunit
+	@make -s behat
 
 rename:
 	@php bin/rename-plugin.php
