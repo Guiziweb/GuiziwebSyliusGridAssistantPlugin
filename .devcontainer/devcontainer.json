@@ -1,0 +1,11 @@
+{
+    "name": "Sylius Plugin (GridAssistant)",
+    "dockerComposeFile": [
+        "../compose.yml",
+        "../compose.override.dist.yml"
+    ],
+    "service": "php",
+    "workspaceFolder": "/srv/sylius",
+    "shutdownAction": "stopCompose",
+    "postCreateCommand": "composer install --no-interaction"
+}
