@@ -86,4 +86,18 @@ final class StringFilterValueFormatterTest extends TestCase
 
         self::assertNull($result->value);
     }
+
+    public function testFormatTrimsLeadingAndTrailingWhitespace(): void
+    {
+        $result = $this->formatter->format(['value' => ' john ', 'type' => 'equal'], $this->filter());
+
+        self::assertSame(['type' => 'equal', 'value' => 'john'], $result->value);
+    }
+
+    public function testFormatWithOnlyWhitespaceValueReturnsNull(): void
+    {
+        $result = $this->formatter->format(['value' => '   '], $this->filter());
+
+        self::assertNull($result->value);
+    }
 }
