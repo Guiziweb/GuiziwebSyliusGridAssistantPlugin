@@ -6,5 +6,10 @@ on:
 
 jobs:
     dispatch:
+        permissions:
+            contents: write
+            pull-requests: write
+            issues: write
+            id-token: write
         uses: Guiziweb/.github/.github/workflows/claude-dispatch.yml@feat/claude-dispatch
         secrets: inherit
