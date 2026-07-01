@@ -30,6 +30,8 @@ final class StringFilterValueFormatter implements FilterValueFormatterInterface
             $val = is_scalar($value) ? (string) $value : '';
         }
 
+        $val = trim($val);
+
         if ('' === $val && !in_array($type, ['empty', 'not_empty'], true)) {
             return new FilterFormatResult(null);
         }
