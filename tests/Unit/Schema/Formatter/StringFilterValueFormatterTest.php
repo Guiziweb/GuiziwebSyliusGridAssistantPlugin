@@ -107,4 +107,18 @@ final class StringFilterValueFormatterTest extends TestCase
 
         self::assertSame(['type' => 'empty', 'value' => ''], $result->value);
     }
+
+    public function testFormatTrimsNonBreakingSpaces(): void
+    {
+        $result = $this->formatter->format(['value' => "\u{00A0}john\u{00A0}", 'type' => 'equal'], $this->filter());
+
+        self::assertSame(['type' => 'equal', 'value' => 'john'], $result->value);
+    }
+
+    public function testFormatNonBreakingSpaceOnlyValueReturnsNull(): void
+    {
+        $result = $this->formatter->format(['value' => "\u{00A0}\u{00A0}", 'type' => 'equal'], $this->filter());
+
+        self::assertNull($result->value);
+    }
 }
