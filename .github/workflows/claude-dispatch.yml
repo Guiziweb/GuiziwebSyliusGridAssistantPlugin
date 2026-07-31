@@ -11,5 +11,5 @@ jobs:
             pull-requests: write
             issues: write
             id-token: write
-        uses: Guiziweb/.github/.github/workflows/claude-dispatch.yml@feat/claude-dispatch
+        uses: Guiziweb/.github/.github/workflows/claude-dispatch.yml@main
         secrets: inherit
