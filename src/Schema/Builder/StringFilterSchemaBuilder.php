@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Schema\Builder;
 
+use Guiziweb\SyliusGridAssistantPlugin\Schema\StringOperators;
 use Sylius\Component\Grid\Definition\Filter;
 use Sylius\Component\Grid\Filter\StringFilter;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -11,19 +12,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class StringFilterSchemaBuilder implements FilterSchemaBuilderInterface
 {
     use TranslateLabelTrait;
-
-    private const OPERATORS = [
-        StringFilter::TYPE_EQUAL,
-        StringFilter::TYPE_NOT_EQUAL,
-        StringFilter::TYPE_CONTAINS,
-        StringFilter::TYPE_NOT_CONTAINS,
-        StringFilter::TYPE_STARTS_WITH,
-        StringFilter::TYPE_ENDS_WITH,
-        StringFilter::TYPE_EMPTY,
-        StringFilter::TYPE_NOT_EMPTY,
-        StringFilter::TYPE_IN,
-        StringFilter::TYPE_NOT_IN,
-    ];
 
     public function __construct(
         private readonly TranslatorInterface $translator,
@@ -59,7 +47,7 @@ class StringFilterSchemaBuilder implements FilterSchemaBuilderInterface
                     'description' => $this->buildDescriptionValue(),
                 ],
                 'type' => [
-                    'anyOf' => [['type' => 'string', 'enum' => self::OPERATORS], ['type' => 'null']],
+                    'anyOf' => [['type' => 'string', 'enum' => StringOperators::ALL], ['type' => 'null']],
                     'description' => $this->buildDescriptionOperator($defaultOperator),
                 ],
             ],
