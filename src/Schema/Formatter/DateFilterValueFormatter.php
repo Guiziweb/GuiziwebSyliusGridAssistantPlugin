@@ -22,14 +22,22 @@ final class DateFilterValueFormatter implements FilterValueFormatterInterface
 
         $result = [];
 
-        if (is_string($value['start'] ?? null) && '' !== $value['start']) {
-            $result['from'] = ['date' => $value['start']];
-        }
-
-        if (is_string($value['end'] ?? null) && '' !== $value['end']) {
-            $result['to'] = ['date' => $value['end']];
+        foreach (['start' => 'from', 'end' => 'to'] as $key => $bound) {
+            $date = $value[$key] ?? null;
+            if (is_string($date) && $this->isRealDate($date)) {
+                $result[$bound] = ['date' => $date];
+            }
         }
 
         return new FilterFormatResult(!empty($result) ? $result : null);
+    }
+
+    private function isRealDate(string $date): bool
+    {
+        if (1 !== preg_match('/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[T ].*)?$/', $date, $m)) {
+            return false;
+        }
+
+        return checkdate((int) $m[2], (int) $m[3], (int) $m[1]);
     }
 }
