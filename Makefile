@@ -4,6 +4,12 @@ DOCKER_COMPOSE ?= docker compose
 DOCKER_USER ?= "$(shell id -u):$(shell id -g)"
 ENV ?= "dev"
 
+ifdef CI
+PHP :=
+else
+PHP := ENV=$(ENV) DOCKER_USER=$(DOCKER_USER) $(DOCKER_COMPOSE) run --rm php
+endif
+
 init:
 	@make -s docker-compose-check
 	@if [ ! -e compose.override.yml ]; then \
@@ -55,19 +61,39 @@ load-fixtures:
 	@ENV=$(ENV) DOCKER_USER=$(DOCKER_USER) $(DOCKER_COMPOSE) run --rm php vendor/bin/console sylius:fixtures:load -n
 
 phpstan:
-	@ENV=$(ENV) DOCKER_USER=$(DOCKER_USER) $(DOCKER_COMPOSE) run --rm php vendor/bin/phpstan analyse -c phpstan.neon
+	@$(PHP) vendor/bin/phpstan analyse -c phpstan.neon
 
 ecs:
-	@ENV=$(ENV) DOCKER_USER=$(DOCKER_USER) $(DOCKER_COMPOSE) run --rm php vendor/bin/ecs check src
+	@$(PHP) vendor/bin/ecs check $(ARGS)
+
+composer-validate:
+	@$(PHP) composer validate --ansi --strict
+
+audit:
+	@$(PHP) composer audit --ansi --abandoned=report
+
+lint-container:
+	@$(PHP) vendor/bin/console lint:container
+
+lint-twig:
+	@$(PHP) vendor/bin/console lint:twig templates
+
+lint-yaml:
+	@$(PHP) vendor/bin/console lint:yaml config
 
 phpunit:
-	@ENV=$(ENV) DOCKER_USER=$(DOCKER_USER) $(DOCKER_COMPOSE) run --rm php vendor/bin/phpunit $(ARGS)
+	@$(PHP) vendor/bin/phpunit $(ARGS)
 
 phpunit-unit:
-	@ENV=$(ENV) DOCKER_USER=$(DOCKER_USER) $(DOCKER_COMPOSE) run --rm php vendor/bin/phpunit --testsuite unit $(ARGS)
+	@$(PHP) vendor/bin/phpunit --testsuite unit $(ARGS)
+
+phpunit-non-unit:
+	@$(PHP) vendor/bin/phpunit --testsuite non-unit $(ARGS)
 
 behat:
 	@ENV=$(ENV) DOCKER_USER=root $(DOCKER_COMPOSE) run --rm php vendor/bin/behat
 
 rename:
 	@php bin/rename-plugin.php
+
+qa: composer-validate audit lint-container lint-twig lint-yaml phpstan ecs

@@ -53,7 +53,7 @@ final class RecordReplayPlatform implements PlatformInterface
             'model' => $model,
             'input' => $this->normalizeInput($input),
             'options' => $options,
-        ], JSON_THROW_ON_ERROR));
+        ], \JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -102,7 +102,7 @@ final class RecordReplayPlatform implements PlatformInterface
             'content' => $result->getContent(),
         ];
 
-        file_put_contents($path, json_encode($payload, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR));
+        file_put_contents($path, json_encode($payload, \JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR));
     }
 
     /**
@@ -111,12 +111,12 @@ final class RecordReplayPlatform implements PlatformInterface
     private function replay(string $path, array $options): DeferredResult
     {
         /** @var array{type: string, content: mixed} $payload */
-        $payload = json_decode((string) file_get_contents($path), true, flags: JSON_THROW_ON_ERROR);
+        $payload = json_decode((string) file_get_contents($path), true, flags: \JSON_THROW_ON_ERROR);
 
         $content = $payload['content'];
         $result = 'object' === $payload['type']
             ? new ObjectResult(is_array($content) ? $content : (array) $content)
-            : new TextResult(is_string($content) ? $content : json_encode($content, JSON_THROW_ON_ERROR));
+            : new TextResult(is_string($content) ? $content : json_encode($content, \JSON_THROW_ON_ERROR));
 
         return $this->wrap($result, $options);
     }
