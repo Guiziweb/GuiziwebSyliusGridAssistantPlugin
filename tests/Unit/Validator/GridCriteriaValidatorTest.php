@@ -89,6 +89,30 @@ final class GridCriteriaValidatorTest extends TestCase
         self::assertSame([], $validator->validate(['state' => 'raw'], $grid));
     }
 
+    public function testSkipsFilterOptedOutOfAi(): void
+    {
+        $grid = $this->makeGrid();
+        $filter = Filter::fromNameAndType('customer_email', 'string');
+        $filter->setOptions(['ai_searchable' => false]);
+        $grid->addFilter($filter);
+
+        $validator = new GridCriteriaValidator($this->emptyRegistry(), $this->createMock(LoggerInterface::class));
+
+        self::assertSame([], $validator->validate(['customer_email' => 'x@y.z'], $grid));
+    }
+
+    public function testSkipsDisabledFilter(): void
+    {
+        $grid = $this->makeGrid();
+        $filter = Filter::fromNameAndType('internal', 'string');
+        $filter->setEnabled(false);
+        $grid->addFilter($filter);
+
+        $validator = new GridCriteriaValidator($this->emptyRegistry(), $this->createMock(LoggerInterface::class));
+
+        self::assertSame([], $validator->validate(['internal' => 'value'], $grid));
+    }
+
     public function testReturnsEmptyArrayForEmptyInput(): void
     {
         $validator = new GridCriteriaValidator($this->emptyRegistry(), $this->createMock(LoggerInterface::class));
