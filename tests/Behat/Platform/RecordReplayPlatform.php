@@ -7,6 +7,7 @@ namespace Tests\Guiziweb\SyliusGridAssistantPlugin\Behat\Platform;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\AI\Platform\Message\MessageInterface;
 use Symfony\AI\Platform\Message\UserMessage;
+use Symfony\AI\Platform\Model;
 use Symfony\AI\Platform\ModelCatalog\ModelCatalogInterface;
 use Symfony\AI\Platform\PlainConverter;
 use Symfony\AI\Platform\PlatformInterface;
@@ -25,9 +26,10 @@ final class RecordReplayPlatform implements PlatformInterface
     ) {
     }
 
-    public function invoke(string $model, array|string|object $input, array $options = []): DeferredResult
+    public function invoke(string|Model $model, array|string|object $input, array $options = []): DeferredResult
     {
-        $fixturePath = sprintf('%s/%s/%s.json', $this->fixturesDir, $model, $this->hashRequest($model, $input, $options));
+        $name = $model instanceof Model ? $model->getName() : $model;
+        $fixturePath = sprintf('%s/%s/%s.json', $this->fixturesDir, $name, $this->hashRequest($name, $input, $options));
 
         if (!$this->recordMode && file_exists($fixturePath)) {
             return $this->replay($fixturePath, $options);
