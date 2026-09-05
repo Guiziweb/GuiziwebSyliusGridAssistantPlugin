@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Validator;
 
+use Guiziweb\SyliusGridAssistantPlugin\Schema\AiExposure;
 use Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter\FilterValueFormatterRegistryInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Definition\Grid;
@@ -19,19 +20,20 @@ final readonly class GridCriteriaValidator implements GridCriteriaValidatorInter
     public function validate(array $rawCriteria, Grid $grid): array
     {
         $valid = [];
+        $exposed = AiExposure::filters($grid);
 
         foreach ($rawCriteria as $filterName => $value) {
             if (null === $value) {
                 continue;
             }
 
-            if (!$grid->hasFilter($filterName)) {
+            if (!isset($exposed[$filterName])) {
                 $this->aiLogger->warning('[GridAssistant] Unknown filter skipped', ['filter' => $filterName]);
 
                 continue;
             }
 
-            $filter = $grid->getFilter($filterName);
+            $filter = $exposed[$filterName];
             $filterType = $filter->getType();
 
             if (!$this->formatterRegistry->has($filterType)) {

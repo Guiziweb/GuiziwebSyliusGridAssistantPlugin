@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Validator;
 
+use Guiziweb\SyliusGridAssistantPlugin\Schema\AiExposure;
 use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Definition\Grid;
 
@@ -16,12 +17,7 @@ final readonly class GridSortingValidator implements GridSortingValidatorInterfa
 
     public function validate(array $rawSorting, Grid $grid): array
     {
-        $sortableFields = [];
-        foreach ($grid->getEnabledFields() as $field) {
-            if ($field->isSortable()) {
-                $sortableFields[] = $field->getName();
-            }
-        }
+        $sortableFields = array_keys(AiExposure::sortableFields($grid));
 
         $valid = [];
         foreach ($rawSorting as $field => $direction) {

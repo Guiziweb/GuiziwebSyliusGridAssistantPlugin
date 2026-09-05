@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Guiziweb\SyliusGridAssistantPlugin\Schema\Formatter;
 
+use Guiziweb\SyliusGridAssistantPlugin\Schema\StringOperators;
 use Sylius\Component\Grid\Definition\Filter;
 use Sylius\Component\Grid\Filter\StringFilter;
 
@@ -28,6 +29,10 @@ final class StringFilterValueFormatter implements FilterValueFormatterInterface
         } else {
             $type = $defaultOperator;
             $val = is_scalar($value) ? (string) $value : '';
+        }
+
+        if (null === $fixedType && !in_array($type, StringOperators::ALL, true)) {
+            return new FilterFormatResult(null);
         }
 
         $val = trim(str_replace("\u{00A0}", ' ', $val));

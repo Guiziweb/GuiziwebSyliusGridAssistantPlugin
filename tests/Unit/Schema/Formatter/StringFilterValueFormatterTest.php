@@ -80,6 +80,37 @@ final class StringFilterValueFormatterTest extends TestCase
         self::assertSame(['type' => 'in', 'value' => 'foo,bar,baz'], $result->value);
     }
 
+    public function testFormatRejectsAnOperatorTheSchemaNeverOffered(): void
+    {
+        $result = $this->formatter->format(['value' => '100', 'type' => 'greater_than'], $this->filter());
+
+        self::assertNull($result->value);
+    }
+
+    public function testFormatRejectsMemberOfWhichStringFilterCannotBuildOnAScalarField(): void
+    {
+        $result = $this->formatter->format(['value' => '100', 'type' => 'member_of'], $this->filter());
+
+        self::assertNull($result->value);
+    }
+
+    public function testFormatIgnoresABogusOperatorWhenTheGridFixesTheType(): void
+    {
+        $filter = $this->filter();
+        $filter->setFormOptions(['type' => 'contains']);
+
+        $result = $this->formatter->format(['value' => '00022', 'type' => 'greater_than'], $filter);
+
+        self::assertSame(['value' => '00022'], $result->value);
+    }
+
+    public function testFormatRejectsMemberOfEvenWhenTheGridDeclaresIt(): void
+    {
+        $result = $this->formatter->format(['value' => 'promo'], $this->filter(['type' => 'member_of']));
+
+        self::assertNull($result->value);
+    }
+
     public function testFormatNullReturnsNull(): void
     {
         $result = $this->formatter->format(null, $this->filter());

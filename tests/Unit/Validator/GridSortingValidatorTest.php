@@ -122,6 +122,19 @@ final class GridSortingValidatorTest extends TestCase
         self::assertSame([], $validator->validate(['total' => 'asc'], $grid));
     }
 
+    public function testSkipsFieldOptedOutOfAi(): void
+    {
+        $grid = Grid::fromCodeAndDriverConfiguration('test_grid', 'doctrine/orm', []);
+        $field = Field::fromNameAndType('internalScore', 'string');
+        $field->setSortable('internalScore');
+        $field->setOptions(['ai_searchable' => false]);
+        $grid->addField($field);
+
+        $validator = new GridSortingValidator($this->createMock(LoggerInterface::class));
+
+        self::assertSame([], $validator->validate(['internalScore' => 'asc'], $grid));
+    }
+
     private function gridWithSortableField(string $name): Grid
     {
         $grid = Grid::fromCodeAndDriverConfiguration('test_grid', 'doctrine/orm', []);
