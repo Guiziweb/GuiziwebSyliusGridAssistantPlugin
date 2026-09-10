@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.4.0](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/compare/v0.3.0...v0.4.0) (2026-09-10)
+
+
+### Features
+
+* add devcontainer + Playwright MCP ([969e683](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/969e6837fd1921bf1328428dc9f2e47efa3df7d7))
+* add devcontainer + Playwright MCP ([43b4509](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/43b450999a2fbc1b68c45852d68573f59363eb15))
+* **component:** validate query with Symfony Validator (NotBlank + Length 500) ([82ee1ae](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/82ee1aee60b7042c0eed6b29f43d1ad02013628c))
+* **component:** validate query with Symfony Validator (NotBlank + Length 500) ([1f58885](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/1f58885398d95d60f83b587fb48aa79cd11d8786))
+* **rate-limit:** make the rate-limit key resolver pluggable ([2738d07](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/2738d076710c304e19b1ee5b508146773d00ae5d))
+* **rate-limit:** make the rate-limit key resolver pluggable ([a2b9224](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/a2b922409c4b8742ac46069e443371e1a8d7765d))
+
+
+### Bug Fixes
+
+* **schema:** also trim non-breaking spaces on string filter values ([89ba0e7](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/89ba0e7f8b9e6f3d347ea1a6c6ec4999588f978f))
+* **schema:** drop date values MySQL cannot convert ([6313b1e](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/6313b1e133d6983eca237fa537500290842d552d))
+* **schema:** enforce the ai_searchable opt-out when validating ([efdc78d](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/efdc78d58b4442872ade689ce39b9d980976d289))
+* **schema:** reject string operators the schema never offered ([021e40d](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/021e40d8915a0e46b5b863bdd7b9aaf6b6ea45a6))
+* **schema:** trim whitespace on string filter values ([47a9b49](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/47a9b49eeb9415b6ab2d4aefe1e714a6b74b3ce8)), closes [#45](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/issues/45)
+* **security:** enforce enabled_grids whitelist in GridQueryProcessor ([04059b8](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/04059b87cab3d017bec5fbcf26a07b17d630fca2))
+* **security:** enforce enabled_grids whitelist in GridQueryProcessor ([1f44d1f](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/1f44d1f4055a8eb40b376366978534a6fad65376))
+* **security:** route Live Component under admin firewall ([cfd1846](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/cfd1846beb4d3a752b62d47e3cec7b8b0d5e78bb))
+* **security:** route Live Component under admin firewall ([182f218](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/182f218ee23f5a67185ebda5d1c75548612f02c5))
+* **test:** align sort direction test with skip behavior from [#29](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/issues/29) ([27c7f0a](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/27c7f0a0cf6560fb70f61afbc2f72f346c70c0c8))
+* **test:** update sort direction test to match skip behavior introduced by [#29](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/issues/29) ([973e650](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/973e6509f73445ae1a436c0d8a89484716314170))
+* **validator:** skip invalid sort directions instead of forcing asc ([e417b2a](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/e417b2a9e6a61d8710d82f8d63ad7374dd2ff880))
+* **validator:** skip invalid sort directions instead of forcing asc ([586d084](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/commit/586d084e0cbe83f5551658b425a4a43972a2638c))
+
 ## [0.3.0](https://github.com/Guiziweb/GuiziwebSyliusGridAssistantPlugin/compare/v0.2.0...v0.3.0) (2026-05-14)
 
 
