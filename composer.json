@@ -57,7 +57,7 @@
         "sylius/test-application": "^2.0.0@alpha",
         "symfony/browser-kit": "^7.3",
         "symfony/debug-bundle": "^7.3",
-        "symfony/dotenv": "^7.3",
+        "symfony/dotenv": "^8.1",
         "symfony/http-client": "^7.3",
         "symfony/intl": "^7.3",
         "symfony/runtime": "^7.3",
