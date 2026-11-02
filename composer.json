@@ -60,7 +60,7 @@
         "symfony/dotenv": "^7.3",
         "symfony/http-client": "^7.3",
         "symfony/intl": "^7.3",
-        "symfony/runtime": "^7.3",
+        "symfony/runtime": "^8.1",
         "symfony/web-profiler-bundle": "^7.3",
         "symfony/webpack-encore-bundle": "^2.2"
     },
