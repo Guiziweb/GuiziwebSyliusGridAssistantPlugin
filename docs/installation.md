@@ -5,7 +5,8 @@ This plugin is **provider-agnostic** - you choose which LLM bridge (OpenAI, Gemi
 ## Prerequisites
 
 - PHP `^8.2`
-- Sylius `^2.1`
+- Sylius `^2.2`
+- Composer allowed to install beta packages (Symfony AI 1.0 has no stable release yet)
 - An AI provider account + API key
 
 ## 1. Add the Guiziweb Flex recipe endpoint (one time per project)
@@ -31,7 +32,11 @@ If you skip this step, jump to [Manual install](#manual-install) below.
 
 ## 2. Install the plugin
 
+The plugin runs on Symfony AI, whose packages are `1.0@beta`: a project with the default `minimum-stability: stable` refuses to install them. Allow beta packages first; `prefer-stable` keeps everything else on stable versions.
+
 ```bash
+composer config minimum-stability beta
+composer config prefer-stable true
 composer require guiziweb/sylius-grid-assistant-plugin
 ```
 

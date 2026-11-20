@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Sylius\Component\Grid\Definition\Filter;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Autocomplete\AutocompleterRegistry;
+use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
 
 final class EntityFilterValueFormatter implements FilterValueFormatterInterface
@@ -84,7 +85,7 @@ final class EntityFilterValueFormatter implements FilterValueFormatterInterface
         ]);
 
         $autocompleter = $this->autocompleterRegistry->getAutocompleter($autocompleterAlias);
-        if (null === $autocompleter) {
+        if (!$autocompleter instanceof EntityAutocompleterInterface) {
             $this->aiLogger->warning('[EntityFilterValueFormatter] Autocompleter not found', [
                 'alias' => $autocompleterAlias,
             ]);
