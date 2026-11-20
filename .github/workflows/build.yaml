@@ -101,8 +101,8 @@ jobs:
                 name: Show the web server logs
                 if: failure()
                 run: |
-                    find ~/.symfony5/log -type f -exec tail -n 150 {} + || true
-                    tail -n 150 vendor/sylius/test-application/var/log/test.log || true
+                    symfony server:log --dir=vendor/sylius/test-application/public --no-follow --lines=200 || true
+                    find . -name '*.log' -path '*var/log*' -not -path '*/node_modules/*' -exec tail -n 150 {} + || true
 
             -
                 name: Upload Behat logs
