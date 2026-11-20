@@ -94,6 +94,14 @@ jobs:
                 run: make phpunit-non-unit
 
             -
+                name: Disable the JIT compilers of PHP 8.2
+                if: matrix.php == '8.2'
+                run: |
+                    printf "pcre.jit=0\nopcache.jit=disable\n" | sudo tee /etc/php/8.2/fpm/conf.d/99-no-jit.ini /etc/php/8.2/cli/conf.d/99-no-jit.ini
+                    symfony server:stop --dir=vendor/sylius/test-application/public
+                    symfony server:start --port=8080 --dir=vendor/sylius/test-application/public --daemon --no-tls
+
+            -
                 name: Run Behat
                 run: vendor/bin/behat --colors --strict -vvv --no-interaction -f progress || vendor/bin/behat --colors --strict -vvv --no-interaction -f progress --rerun
 
@@ -101,7 +109,7 @@ jobs:
                 name: Show the web server logs
                 if: failure()
                 run: |
-                    symfony server:log --dir=vendor/sylius/test-application/public --no-follow --lines=200 || true
+                    timeout 30 symfony server:log --dir=vendor/sylius/test-application/public --no-follow --lines=200 || true
                     find . -name '*.log' -path '*var/log*' -not -path '*/node_modules/*' -exec tail -n 150 {} + || true
 
             -
