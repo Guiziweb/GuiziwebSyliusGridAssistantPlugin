@@ -98,6 +98,13 @@ jobs:
                 run: vendor/bin/behat --colors --strict -vvv --no-interaction -f progress || vendor/bin/behat --colors --strict -vvv --no-interaction -f progress --rerun
 
             -
+                name: Show the web server logs
+                if: failure()
+                run: |
+                    find ~/.symfony5/log -type f -exec tail -n 150 {} + || true
+                    tail -n 150 vendor/sylius/test-application/var/log/test.log || true
+
+            -
                 name: Upload Behat logs
                 uses: actions/upload-artifact@v4
                 if: failure()
