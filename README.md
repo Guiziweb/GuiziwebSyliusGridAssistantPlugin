@@ -44,6 +44,8 @@ The plugin sends the query to a Large Language Model (OpenAI, Gemini, Anthropic,
 This plugin ships a [Symfony Flex recipe](https://github.com/Guiziweb/SyliusRecipes). With the Guiziweb recipe endpoint configured in your project (see linked repo), the install boils down to:
 
 ```bash
+composer config minimum-stability beta   # Symfony AI 1.0 has no stable release yet
+composer config prefer-stable true
 composer require guiziweb/sylius-grid-assistant-plugin
 composer require symfony/ai-bundle symfony/ai-open-ai-platform  # or another bridge
 ```
