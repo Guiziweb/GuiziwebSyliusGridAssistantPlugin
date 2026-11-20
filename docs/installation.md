@@ -5,7 +5,7 @@ This plugin is **provider-agnostic** - you choose which LLM bridge (OpenAI, Gemi
 ## Prerequisites
 
 - PHP `^8.2`
-- Sylius `^2.1`
+- Sylius `^2.2`
 - An AI provider account + API key
 
 ## 1. Add the Guiziweb Flex recipe endpoint (one time per project)
